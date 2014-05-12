@@ -1,0 +1,330 @@
+店铺所有订单管理
+
+
+<%- include header%>
+<%=user%>
+		<% if(!locals.error){%>
+		<p>商品管理</p>
+		<p>店铺管理</p>
+		<p>商铺订单管理</p>
+		<p>个人信息管理</p>
+		<p>个人订单管理</p>
+		
+
+<% var sum=0; posts.forEach(function(post,index){sum +=post.sold*post.price;})%>
+
+<%=sum%>
+
+<script>
+$(function(){
+
+
+		var winH = $(window).height();
+	
+			var i=2;
+
+			$(window).unbind("scroll");
+			$(window).scroll(function () { 
+				var pageH=$("body").height();
+				var scrollT = $(window).scrollTop();
+				var aa = (pageH-winH-scrollT)/winH;
+				
+				if(aa<0.02){
+					surl=window.location.href;
+				$.ajax({
+						type:"GET",
+						data:{page:i},
+						contentType:'application/json',
+						url:surl,
+						success:function(data){
+						if(data.orders.length>0){
+							data.orders.forEach(function(order,index){
+
+							switch(order.state){
+												case 1:
+												ostate="用户下单，等待卖家处理";
+												break;
+												case 2:
+												ostate="卖家确认，准备商品";
+												break;
+												case 3:
+												ostate="快递派送中";
+												break;
+												case 4:
+												ostate="用户已收货";
+												break;
+												case 0:
+												ostate="订单已取消";
+												break;
+												default:
+												ostate="订单出现未知错误";
+										}
+
+							var str="<hr><div class=\"hidden\">"+order.oid+"</div><div class=\"info row\"><div class=\"col-xs-8\">"+order.time.minute+"</div><div class=\"col-xs-4\"><strong>总价¥:</strong><strong class=\"eachordertotal\">"+ order.amount*order.price+"</strong></div></div><hr><div class=\"address row\"><div class=\"ip col-xs-6\">"+order.ip+"</div><div class=\"who col-xs-2\">"+order.who+"</div><div class=\"phone col-xs-4\">"+order.phone+"</div></div><hr><div class=\"item row\"><div class=\"hidden\">"+order.pid+"</div><div class=\"col-xs-4\"><img  src="+order.pic+" class=\"img-responsive\"></div><div class=\"col-xs-6\"><div class=\"name\"><a href=\"/p/"+order.pid+"\">"+order.name+"</a></div><hr><div class=\"price\">单价¥:"+order.price+"</div><div class=\"price\">数量:"+order.amount+"</div><hr><span class=\"tips\">"+ostate+"</span></div><div class=\"col-xs-2\"><div class=\"state hidden\">"+order.state+"</div><button class=\"process row btn btn-success\">处理</button><hr><button class=\"trash row btn btn-danger\">废弃</button></div></div>";
+
+
+
+							$("#orders").append(str);	
+							});	
+							i++;	
+
+			$('.process').unbind("click");
+			$(".process").click(function(){
+
+			
+				var holder=$(this);
+					var order={};
+					order.oid=$(this).parent().parent().prev().prev().prev().prev().prev().text();
+
+				 	$.ajax({
+					type:"POST",
+					data:JSON.stringify(order),
+					contentType:'application/json',
+					url:"/orderprocess",
+					success:function(data){
+									var ostate=""
+								switch(data.state){
+												case 1:
+												ostate="用户下单，等待卖家处理";
+												break;
+												case 2:
+												ostate="卖家确认，准备商品";
+												break;
+												case 3:
+												ostate="快递派送中";
+												break;
+												case 4:
+												ostate="用户已收货";
+												break;
+												case 0:
+												ostate="订单已取消";
+												break;
+												default:
+												ostate="订单出现未知错误";
+										}
+								holder.parent().prev().children(".tips").text(ostate);
+						
+					}
+					});
+
+
+			});
+
+
+
+			$('.trash').unbind("click");
+			$(".trash").click(function(){
+
+			
+				var holder=$(this);
+					var order={};
+					order.oid=$(this).parent().parent().prev().prev().prev().prev().prev().text();
+				 	$.ajax({
+					type:"POST",
+					data:JSON.stringify(order),
+					contentType:'application/json',
+					url:"/ordertrash",
+					success:function(data){
+									var ostate=""
+								switch(data.state){
+												case 1:
+												ostate="用户下单，等待卖家处理";
+												break;
+												case 2:
+												ostate="卖家确认，准备商品";
+												break;
+												case 3:
+												ostate="快递派送中";
+												break;
+												case 4:
+												ostate="用户已收货";
+												break;
+												case 0:
+												ostate="订单已取消";
+												break;
+												default:
+												ostate="订单出现未知错误";
+										}
+								holder.parent().prev().children(".tips").text(ostate);
+						
+					}
+					});
+
+
+			});
+							}
+							else {
+							$("#ordertips").text("亲，已经到底了，快去shopping吧！");
+							return false;
+							}	
+
+
+											
+						}
+
+						});
+}
+			});	
+
+
+			$('.process').unbind("click");
+			$(".process").click(function(){
+
+			
+				var holder=$(this);
+					var order={};
+					order.oid=$(this).parent().parent().prev().prev().prev().prev().prev().text();
+
+				 	$.ajax({
+					type:"POST",
+					data:JSON.stringify(order),
+					contentType:'application/json',
+					url:"/orderprocess",
+					success:function(data){
+									var ostate=""
+								switch(data.state){
+												case 1:
+												ostate="用户下单，等待卖家处理";
+												break;
+												case 2:
+												ostate="卖家确认，准备商品";
+												break;
+												case 3:
+												ostate="快递派送中";
+												break;
+												case 4:
+												ostate="用户已收货";
+												break;
+												case 0:
+												ostate="订单已取消";
+												break;
+												default:
+												ostate="订单出现未知错误";
+										}
+								holder.parent().prev().children(".tips").text(ostate);
+						
+					}
+					});
+
+
+			});
+
+
+
+			$('.trash').unbind("click");
+			$(".trash").click(function(){
+
+			
+				var holder=$(this);
+					var order={};
+					order.oid=$(this).parent().parent().prev().prev().prev().prev().prev().text();
+				 	$.ajax({
+					type:"POST",
+					data:JSON.stringify(order),
+					contentType:'application/json',
+					url:"/ordertrash",
+					success:function(data){
+									var ostate=""
+								switch(data.state){
+												case 1:
+												ostate="用户下单，等待卖家处理";
+												break;
+												case 2:
+												ostate="卖家确认，准备商品";
+												break;
+												case 3:
+												ostate="快递派送中";
+												break;
+												case 4:
+												ostate="用户已收货";
+												break;
+												case 0:
+												ostate="订单已取消";
+												break;
+												default:
+												ostate="订单出现未知错误";
+										}
+								holder.parent().prev().children(".tips").text(ostate);
+						
+					}
+					});
+
+
+			});
+
+});
+</script>
+<div id="orders">
+<%if(orders && orders.length>0){orders.forEach(function(order,index){var ostate="";
+switch(order.state){
+		case 1:
+		ostate="用户下单，等待卖家处理";
+		break;
+		case 2:
+		ostate="卖家确认，准备商品";
+		break;
+		case 3:
+		ostate="快递派送中";
+		break;
+		case 4:
+		ostate="用户已收货";
+		break;
+		case 0:
+		ostate="订单已取消";
+		break;
+		default:
+		ostate="订单出现未知错误";
+}
+
+%>
+	<hr>
+	<div class="hidden"><%=order.oid%></div>
+	<div class="info row">
+		<div class="col-xs-6"><%=order.time.minute%></div>
+		<div class="col-xs-6"><strong>总价¥:</strong><strong class="eachordertotal"><%= order.amount*order.price%></strong></div>
+	</div>
+	<hr>
+	<div class="address row">
+		<div class="ip col-xs-6"><%=order.ip%></div>
+		<div class="who col-xs-2"><%=order.who%></div>
+		<div class="phone col-xs-4"><%=order.phone%></div>
+	</div>
+			<hr>
+	<div class="item row">
+		<div class="hidden"><%=order.pid%>
+		</div>
+		<div class="col-xs-4">
+			<img  src=<%=order.pic%> class="img-responsive">
+		</div>
+		<div class="col-xs-6">
+			<div class="name"><a href="/p/<%=order.pid%>"><%=order.name%></a></div>
+			<hr>
+			<div class="price">单价¥:<%=order.price%></div>
+			<div class="price">数量:<%=order.amount%></div>
+			<hr>
+			<span class="tips"><%=ostate%></span>
+		</div>
+		<div class="col-xs-2">
+			
+			<div class="state hidden"><%=order.state%></div>
+			
+			<button class="process row btn btn-success">处理</button>
+			
+			<hr>
+			<button class="trash row btn btn-danger">废弃</button>
+			
+		</div>
+	</div>
+	<%})}%>
+
+</div>
+<span id="ordertips" class="tips"></span>
+
+<%}else{%>
+		<a href="#">亲，你尚未开通商铺哦，了解更多请点击</a>
+		<%}%>
+<%- include shopfooter%>
+
+
+
+

@@ -1,0 +1,133 @@
+<%- include header%>
+<%- include welcome%>
+
+<div class="container">
+	<script>
+	$(function(){
+		$(".add").click(function(){
+				var holder=$(this);
+				var data={};
+				var cartno=parseInt($("#cartno").text());
+				data.pid=parseInt($("#pid").text());
+
+				$.ajax({
+				type:"POST",
+				data:JSON.stringify(data),
+				contentType: 'application/json',
+				url:"/cart",
+				success:function(data){
+					$("#carttips").text("已添加至购物车");
+					holder.remove();
+					$("#cartno").text(cartno+1);
+				}
+				});
+
+				
+
+
+
+		});
+
+
+
+	});
+
+
+</script>
+<div class="row">
+				<div class="col-xs-12">
+					<div id="boss" class="hidden"><%=post.boss%></div>
+					<div id="pid" class="hidden"><%=post.pid%></div>
+					<ul class="breadcrumb">
+				         <li>				        
+				            <a class="brand"><%=post.fbrand%></a>
+				          </li>
+				          <li>
+				     		<a class="brand"><%=post.mbrand%></a>
+				          </li>
+				            <li>
+				     		<a class="brand"><%=post.lbrand%></a>
+				          </li>
+			        </ul>
+				</div>
+</div>
+<div class="row">
+	<div class="col-xs-12">
+		<div class="thumbnail">
+							<span id="pid" class="hidden"><%=post.pid%></span>
+							<a href="/p/<%=post.pid%>"><img alt="300x200" src=<%=post.pic%>></a>
+							<span class="badge pull-right">已售<%=post.sold%>关注<%=post.pv%></span>
+							<div class="caption">
+								<h4>
+									<a href="/p/<%=post.pid%>"><%=post.name%></a>
+								</h4>
+								<h6>¥ <strong class="price"><%=post.price%></strong></h6>
+								<p>
+									功能：<%=post.desp%>
+								</p>
+															
+								<span id="carttips" class="tips"></span>
+								<a class="add btn btn-danger"><i class="fa fa-shopping-cart"></i>加入购物车</a> 
+								<div class="row">
+									<p class="col-xs-12">	
+									详细描述：<%- post.ldesp %>
+									</p>	
+									</div>
+							</div>
+		</div>
+	</div>
+</div>
+
+<h4 class="tips">用户体验</h4>
+<hr>
+<div class="row">
+	<div class="col-xs-12">
+		<% if(locals.user){ %>
+		<form method="post">
+		  姓名：<input type="text" name="name" value="<%= locals.user%>" /><br />
+		  <textarea name="content" rows="5" class="col-xs-12" maxlength="140"></textarea><br />
+		  <span class="tips help-block">亲，140字以内哦</span>
+		  
+		  <button id="btn-comment" type="summit" class="btn btn-primary" >我来说两句</button>
+		  </form>
+		  <hr>
+		<% } else { %>
+		  <span class="tips help-block">登录后才能评论哦？<a href="/login" >点击登录</a></span>
+		<% } %>
+	</div>
+</div>	
+	<div id="comments">
+	<% if(comments.length>0){%>
+	<% comments.forEach(function(comment,index){ %>
+	<div class="row">
+	<div class="col-xs-4 hidden">
+	 <%= comment.cmid%>
+	 </div>
+	<div class="col-xs-7">
+	 	 <i class="fa fa-user fa-fw"></i><%= comment.name %>
+	 </div>
+	 <div class="col-xs-5">
+	 <%= comment.time%>
+	 </div>
+	 
+	 </div>
+	 <br>
+	 <div class="row">
+	 <div class="col-xs-2">
+
+	 </div>
+	 <div class="col-xs-10" style="overflow:hidden">
+	 	<%- comment.content%>
+	 </div>
+	 </div>
+	 <hr>
+	<% }) %>
+	<%}else {%>
+		  <span id="commenttips" class="tips help-block">尚未有人评论，亲，快来坐沙发吧！</span>
+	<%}%>
+	
+	</div>
+	
+</div>
+<%-include nav%>
+<%-include footer%>

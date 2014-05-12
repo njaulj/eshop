@@ -1,0 +1,105 @@
+var mongodb=require('./db');
+
+function Post(name,title,pic,desp,price,sex){
+this.name=name;
+this.title=title;
+this.pic=pic;
+this.desp=desp;
+this.price=price;
+this.sex=sex;
+}
+
+module.exports=Post;
+
+Post.prototype.save=function(callback){
+var date=new Date();
+
+var time={date:date,
+	year:date.getFullYear(),
+	month:date.getFullYear()+"-"+(date.getMonth()+1),
+	day : date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate(),
+	minute : date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes()
+};
+
+var post={
+name:this.name,
+time:time,
+title:this.title,
+pic:this.pic,
+desp:this.desp,
+price:this.price,
+sex:this.sex
+};
+
+mongodb.open(function(err,db){
+if(err){return callback(err);}
+db.collection('posts',function(err,collection){
+
+if(err){mongodb.close();return callback(err);}
+collection.insert(post,{
+safe:true},function(err,post){
+
+mongodb.close();
+callback(null);
+
+});
+
+});
+
+});
+
+};
+
+
+Post.get=function(name,callback){
+
+mongodb.open(function(err,db){
+if(err){return callback(err);}
+db.collection('posts',function(err,collection){
+if(err){mongodb.close();return callabck(err);}
+var query={};
+if(name){
+query.name=name;
+}
+
+collection.find(query).sort({time:-1}).toArray(function(err,docs){
+
+mongodb.close();
+if(err){callback(err,null);}
+callback(null,docs);
+
+
+});
+
+
+});
+
+
+});
+
+
+};
+
+
+
+
+
+Post.search=function(keyword,callback){
+
+mongodb.open(function(err,db){
+if(err){return callback(err);}
+db.collection('posts',function(err,collection){
+if(err){mongodb.close();return callabck(err);}
+var pattern = new RegExp("^.*"+keyword+".*$", "i");
+      collection.find({"name":pattern},{"desp":1,"time":1,"title":1}).sort({
+        time:-1
+      }).toArray(function(err, docs){
+        mongodb.close();
+         if (err) {
+         callback(err, null);
+        }
+        callback(null, docs);
+      });
+    });
+  });
+};

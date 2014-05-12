@@ -1,0 +1,81 @@
+<%- include header %>
+<div class="row">
+	
+			<div class="carousel slide" id="carousel-260025">
+				<ol class="carousel-indicators">
+					<li class="active" data-slide-to="0" data-target="#carousel-260025">
+					</li>
+					<li data-slide-to="1" data-target="#carousel-260025">
+					</li>
+					<li data-slide-to="2" data-target="#carousel-260025">
+					</li>
+				</ol>
+				<div class="carousel-inner">
+					<div class="item active">
+						<img alt="" src="./images/hanhou.jpg" />
+					
+					</div>
+					<div class="item">
+						<img alt="" src="./images/iope.jpg" />
+						
+					</div>
+					<div class="item">
+						<img alt="" src="./images/lanzhi.jpg" />
+					
+					</div>
+				</div> <a class="left carousel-control" href="#carousel-260025" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a> <a class="right carousel-control" href="#carousel-260025" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+			</div>
+			</div>
+<div class="row">
+<table class="table">
+<script>
+$(document).ready(function(){
+$(".infoshow").click(function(){
+    $(this).parent().next().slideToggle("slow");
+  });
+});
+</script>
+				
+					
+<tbody>
+<% posts.forEach(function(post,index){ %>
+<tr class="danger">
+<td rowspan=3><img width="120px" height="120px" src=<%= post.pic%> /></td>
+<td colspan=2><%= post.name%></td>
+<td ><a class="btn btn-success" href="#">
+		<i class="icon-zoom-in icon-white"></i>  
+										 加                                          
+		</a></td>
+</tr>
+<tr class="danger">
+<td colspan=2><%= post.desp%></td>
+<td><i class="icon-trash icon-white"></i> 
+		0</td>
+</tr>
+
+<tr class="danger">
+<td><%= post.price%><em>元</em></td>
+<td class="infoshow">点击查看更多</td>
+<td><a class="btn btn-warning" href="#">
+										<i class="icon-zoom-in icon-white"></i>  
+									          减                               
+									</a></td>
+</tr>
+<tr class="info danger">
+<td></td>
+<td colspan=2><%= post.price%><em>元</em></td>
+<td><a class="btn btn-warning" href="#">
+										<i class="icon-zoom-in icon-white"></i>  
+									          减                               
+									</a></td>
+</tr>
+<%})%>
+
+</tbody>
+
+</table>
+</div>
+
+
+
+<%- include footer %>

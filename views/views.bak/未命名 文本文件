@@ -1,0 +1,50 @@
+Cart.delall=function(name,callback){
+	
+	var name=this.name;
+	var cart=this.cart;
+	
+	console.log(cart);
+	mongodb.open(function(err,db){
+	if(err){callback(err);}
+	
+	db.collection('users',function(err,collection){
+	if(err){mongodb.close();callback(err);}
+	
+	collection.findAndModify({"name":name},[],{$pull:{"carts":cart}},{new:true,upsert:true},function(err,user){
+	mongodb.close();
+	console.log(user.carts);
+	
+	});
+
+
+
+});
+	
+	});
+
+};
+
+
+
+
+
+//order.ejs
+
+
+
+
+
+<%orders.forEach(function(order,index){var x=order.carts;%>
+
+<p><% x.forEach(function(car,index){%>
+
+<p><%=car.pic%></p>
+<p><%=car.pname%></p>
+<p><%=car.amount%></p>
+<p><%=car.price%></p>
+<%})%></p>
+
+<p><%= order.adds.ip%></p>
+<p><%= order.adds.who%></p>
+<p><%= order.adds.phone%></p>
+

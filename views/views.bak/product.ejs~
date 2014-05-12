@@ -1,0 +1,7 @@
+<%- include header %>
+
+ 	<%= title%>
+    	<%= post.name%>
+	<%= user%>
+
+<%- include footer %>

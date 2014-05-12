@@ -1,0 +1,136 @@
+<%- include header%>
+<%- include welcome%>
+<%if(ads && ads.length>0){%>
+<div class="carousel slide" id="carousel" >
+	<ol class="carousel-indicators">
+					<li data-slide-to="0" data-target="#carousel">
+					</li>
+					<li data-slide-to="1" data-target="#carousel">
+					</li>
+					<li data-slide-to="2" data-target="#carousel" class="active">
+					</li>
+	</ol>
+				<div class="carousel-inner">
+						<div class="item">
+							
+							<%if(ads.length>0){%>
+							<a href="/p/<%=ads[0].pid%>">
+							<img alt="" src=<%=ads[0].pic%> /></a>
+							<div class="carousel-caption">
+							<h2><%=ads[0].name%></h2>
+							</div>
+							<%}else{%>
+							<img alt="300x200" src="/images/show2.jpg" />
+							<div class="carousel-caption">
+							<br>
+							<h2>店铺装修中……</h2>
+							</div>
+							<%}%>
+						
+							
+						</div>
+						<div class="item">
+							<%if(ads.length>1){%>
+							<a href="/p/<%=ads[1].pid%>"><img alt="" src=<%=ads[1].pic%> /></a>
+							<div class="carousel-caption">
+							<h2><%=ads[1].name%></h2>
+							</div>
+							<%}else{%>
+							<img alt="300x200" src="/images/show2.jpg" />
+							<div class="carousel-caption">
+							<br>
+							<h2>店铺装修中……</h2>
+							</div><%}%>
+						
+							
+						</div>
+						<div class="item active">
+							<%if(ads.length>2){%><a href="/p/<%=ads[2].pid%>">
+							<img alt="" src=<%=ads[2].pic%> /></a>
+							<div class="carousel-caption">
+							<h2><%=ads[2].name%></h2>
+							</div>
+							<%}else{%>
+							<img alt="300x200" src="/images/show2.jpg" />
+							<div class="carousel-caption">
+							<br>
+							<h2>店铺装修中……</h2>
+							</div><%}%>
+						
+							
+						</div>
+			</div> 
+			<a class="left carousel-control" href="#carousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a> 
+			<a class="right carousel-control" href="#carousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+</div>
+<%}%>
+<script>
+	$(function(){
+		$(".add").click(function(){
+				var holder=$(this);
+				var data={};
+				data.pid=parseInt($(this).parent().prev().prev().prev().text());
+				var cartno=parseInt($("#cartno").text());
+
+				$.ajax({
+				type:"POST",
+				data:JSON.stringify(data),
+				contentType: 'application/json',
+				url:"/cart",
+				success:function(data){
+					holder.prev().text("已添加至购物车");
+					holder.remove();
+					$("#cartno").text(cartno+1);
+				}
+				});
+
+				
+
+
+
+		});
+
+
+
+	});
+
+
+</script>
+
+<div id="posts">
+		
+		<div class="container">
+		<h4><i style="color:red" class="fa fa-fire"></i>热门商品</h4>
+		<hr>
+		<div class="col-md-3"></div>
+		<div class="row col-md-9">
+			<%if(posts && posts.length>0){posts.forEach(function(post,index){%>
+				<div class="col-xs-6 col-md-4">
+					<div class="thumbnail">
+							<span class="hidden"><%=post.pid%></span>
+							<a href="/p/<%=post.pid%>"><img alt="300x200" src=<%=post.pic%>></a>
+							<span class="badge pull-right">已售<%=post.sold%>关注<%=post.pv%></span>
+							<div class="caption">
+								<h4>
+									<a href="/p/<%=post.pid%>"><%=post.name%></a>
+								</h4>
+								<h6>¥ <strong class="price"><%=post.price%></strong></h6>
+								<p>
+									功能：<%=post.desp%>
+								</p>								
+								<span class="tips"></span>
+								<a class="add btn btn-danger"><i class="fa fa-shopping-cart"></i>加入购物车</a> 
+							</div>
+					</div>
+					</div>
+			<%})}else{%>
+		<h4>店铺装修中……</h4>
+		<%}%>
+			</div>
+	</div>
+</div>	
+
+
+<%-include page%>
+<%-include nav%>
+<%-include footer%>

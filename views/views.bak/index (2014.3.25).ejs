@@ -1,0 +1,76 @@
+<%- include header%>
+
+<div class="row">
+<table class="table">
+<script>
+$(function(){
+$(".infoshow").click(function(){
+    $(this).parent().next().slideToggle("slow");
+
+  })
+
+
+$(".add").click(function(){
+var amount=parseInt($(this).prev().val());
+
+$(this).prev().val(amount+1);
+})
+
+
+$(".minus").click(function(){
+var amount=parseInt($(this).next().val());
+if(amount>0){
+
+$(this).next().val(amount-1);}
+})
+
+});
+</script>
+				
+					
+<tbody>
+<% posts.forEach(function(post,index){ 
+var color=index%3;
+var bcolor="";
+if (color==0) bcolor="danger";
+if(color==1) bcolor="success";
+if(color==2) bcolor="warning";
+
+%>
+<tr class=<%= bcolor%>>
+<td rowspan=3><img width="120px" height="120px" src=<%= post.pic%> /></td>
+<td colspan=2><%= post.name%></td>
+<td  rowspan=3><button class="minus btn btn-success">减</button> 
+										         
+		<input class="btn btn-warning" size="1"  type="text" value="0" />                 <button class="add btn btn-danger">加</button>                 
+		
+
+
+</td>
+</tr>
+<tr class=<%= bcolor%>>
+<td colspan=2><%= post.desp%></td>
+
+</tr>
+
+<tr class=<%= bcolor%>>
+<td><%= post.price%><em>元</em></td>
+<td class="infoshow">点击查看更多</td>
+</tr>
+<tr class="info danger">
+<td></td>
+<td colspan=2><%= post.price%><em>元</em></td>
+<td><a class="btn btn-warning" href="#">
+										<i class="icon-zoom-in icon-white"></i>  
+									          减                               
+									</a></td>
+</tr>
+<%})%>
+
+</tbody>
+
+</table>
+</div>
+
+
+<%- include footer%>

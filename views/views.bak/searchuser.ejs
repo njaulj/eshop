@@ -1,0 +1,23 @@
+searchuser
+查询用户，模糊查询
+
+
+<%users.forEach(function(user,index){%>
+<% if(user.headpic){%>
+<%=user.headpic%>
+<%}else{%>
+<img src="/uploads/xx.jpeg" class="img-reponsive" />
+<%}%>
+<%=user.name%>
+<% if(user.contact){%>
+<%=user.contact%>
+<%}else{%>
+<p>店主很懒，还没有添加任何信息</p>
+<%}%>
+
+<%=user.role%>
+<%=user.ustate%>
+<%=user.total%>
+
+
+<%})%>

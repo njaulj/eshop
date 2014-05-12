@@ -1,0 +1,23 @@
+<%- include header%>
+<%- include show%>
+<%=user%>
+		<% if(users.role==2){%>
+		<p>商品管理</p>
+		<p>店铺管理</p>
+		<a href="/shopadmin">商铺订单管理</a>
+		<p>个人信息管理</p>
+		<p>个人订单管理</p>
+		<%}else{%>
+		<p>个人信息管理</p>
+		<p>个人订单管理</p>
+		<p>商铺接入申请</p>
+		<%}%>
+<%=users.password%>
+<p>更改密码</p>
+
+
+<%- include shopfooter%>
+
+
+
+

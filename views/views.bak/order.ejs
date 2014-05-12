@@ -1,0 +1,99 @@
+<%- include header%>
+<hr>
+
+<script>
+$(function(){
+
+
+		var winH = $(window).height();
+			var i=2;
+	
+			$(window).scroll(function () { 
+				var pageH=$("body").height();
+				var scrollT = $(window).scrollTop();
+				var aa = (pageH-winH-scrollT)/winH;
+				
+				if(aa<0.02){
+					surl=window.location.href;
+				$.ajax({
+						type:"GET",
+						data:{page:i},
+						contentType:'application/json',
+						url:surl,
+						success:function(data){
+						if(data.orders.length>0){
+							data.orders.forEach(function(order,index){
+							
+							var str="<hr><div class=\"hidden\">"+order.oid+"</div><div class=\"info row\"><div class=\"col-xs-8\">"+order.time.minute+"</div><div class=\"col-xs-4\"><strong>总价¥:</strong><strong class=\"eachordertotal\">"+ order.amount*order.price+"</strong></div></div><hr><div class=\"address row\"><div class=\"ip col-xs-6\">"+order.ip+"</div><div class=\"who col-xs-2\">"+order.who+"</div><div class=\"phone col-xs-4\">"+order.phone+"</div></div><hr><div class=\"item row\"><div class=\"hidden\">"+order.pid+"</div><div class=\"col-xs-4\"><img  src="+order.pic+" class=\"img-responsive\"></div><div class=\"col-xs-6\"><div class=\"name\"><a href=\"/p/"+order.pid+"\">"+order.name+"</a></div><br><br>"+order.price+"</div><div class=\"col-xs-2\"><br><br><div class=\"tips\">"+order.amount+"</div></div></div>";
+
+
+
+							$("#orders").append(str);									
+							});	
+							i++;
+							
+							}
+							else {
+							$("#ordertips").text("亲，已经到底了，快去shopping吧！");
+							return false;
+							}										
+						}
+
+						});
+}
+			});	
+
+
+
+});
+</script>
+<div class="row">
+	<div class="col-xs-4"><strong>欢迎:</strong></div>
+	<div class="col-xs-4"><%= user%></div>
+	<div class="col-xs-4"><a href="/logout" class="btn btn-primary">注销</a></div>
+</div>
+<div class="row">
+<span class="tips help-block"><strong>目前您共消费了：¥</strong><strong id="total"><%=total%></strong></span>
+</div>
+
+<div id="orders">
+<%if(orders && orders.length>0){orders.forEach(function(order,index){%>
+	<hr>
+	<div class="hidden"><%=order.oid%></div>
+	<div class="info row">
+		<div class="col-xs-8"><%=order.time.minute%></div>
+		<div class="col-xs-4"><strong>总价¥:</strong><strong class="eachordertotal"><%= order.amount*order.price%></strong></div>
+	</div>
+	<hr>
+	<div class="address row">
+		<div class="ip col-xs-6"><%=order.ip%></div>
+		<div class="who col-xs-2"><%=order.who%></div>
+		<div class="phone col-xs-4"><%=order.phone%></div>
+	</div>
+			<hr>
+	<div class="item row">
+		<div class="hidden"><%=order.pid%></div>
+		<div class="col-xs-4">
+		<img  src=<%=order.pic%> class="img-responsive">
+		</div>
+		<div class="col-xs-6">
+			<div class="name"><a href="/p/<%=order.pid%>"><%=order.name%></a></div>
+			<br>
+			<br>
+			<%=order.price%>
+		</div>
+		<div class="col-xs-2">
+		<br>
+			<br>
+		<div class="tips"><%=order.amount%></div>
+		</div>
+	</div>
+	<%})}%>
+
+</div>
+<span id="ordertips" class="tips"></span>
+<%- include shopfooter%>
+
+
+
+

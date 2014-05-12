@@ -1,0 +1,103 @@
+var mongodb=require('./db');
+
+function Address(name,address){
+this.name=name;
+this.address=address;
+}
+
+
+module.exports=Address;
+
+
+Address.prototype.save=function(callback){
+	var name=this.name;
+	var address=this.address;
+	mongodb.open(function(err,db){
+	
+		if(err){return callback(err);}
+		
+		db.collection('users',function(err,collection){
+		if(err){mongodb.close();return callback(err);}
+		collection.findAndModify({"name":name},[],{$push:{"adds":address}},{new:true,upsert:true},
+function(err,user){
+
+mongodb.close();
+callback(null,user.adds);
+
+
+});
+});
+});
+};
+
+
+
+
+//get address
+
+Address.get=function(name,callback){
+	mongodb.open(function(err,db){
+	if(err){callback(err);}
+	
+	db.collection('users',function(err,collection){
+	if(err){mongodb.close();callback(err);}
+	
+	collection.findOne({"name":name},function(err,user){
+
+			mongodb.close();
+		if(user){
+		
+		callback(err,user.adds);
+		console.log(user.adds);
+
+		}else {
+		callback(err,null);
+		}
+	});
+
+
+	});
+	
+	});
+
+
+
+
+
+};
+
+
+
+
+//remove address
+Address.del=function(name,callback){
+	
+	var name=this.name;
+	var address=this.address;
+	
+	console.log(address);
+	mongodb.open(function(err,db){
+	if(err){callback(err);}
+	
+	db.collection('users',function(err,collection){
+	if(err){mongodb.close();callback(err);}
+	
+	collection.update({"name":name},{$pull:{"adds":{"ip":address.ip,"who":address.who,"phone":address.who}}},function(err,user){
+
+			mongodb.close();
+		if(user){
+		
+		callback(err,user);
+
+		}else {
+		callback(err,null);
+		}
+	});
+
+
+	});
+	
+	});
+
+};
+

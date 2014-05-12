@@ -1,0 +1,73 @@
+<%- include header%>
+<hr>
+
+<script>
+$(function(){
+		
+			var number=$(".eachordertotal");
+			var sum=parseFloat(0.00);
+			for(i=0;i<number.length;i++)
+			{
+			
+				
+				sum=sum+parseFloat(number.eq(i).text());
+			}
+				
+			$("#total").text(sum);
+
+});
+</script>
+<div class="row">
+	<div class="col-xs-4"><strong>欢迎:</strong></div>
+	<div class="col-xs-4"><%= user%></div>
+	<div class="col-xs-4"><a href="/logout" class="btn btn-primary">注销</a></div>
+</div>
+<div class="row">
+<span class="tips help-block"><strong>目前您共消费了：¥</strong><strong id="total"></strong></span>
+</div>
+
+<%if(orders && orders.length>0){orders.forEach(function(order,index){var carts=order.carts;%>
+	<hr>
+	<div class="hidden"><%=order.oid%></div>
+	<div class="info row">
+		<div class="col-xs-8"><%=order.time.minute%></div>
+		<div class="col-xs-4"><strong>总价¥:</strong><strong class="eachordertotal"><%=order.total%></strong></div>
+	</div>
+	<hr>
+	<div class="address row">
+		<div class="ip col-xs-6"><%=order.adds.ip%></div>
+		<div class="who col-xs-2"><%=order.adds.who%></div>
+		<div class="phone col-xs-4"><%=order.adds.phone%></div>
+	</div>
+
+	<%if(carts.length>0){carts.forEach(function(cart,index){
+		posts.forEach(function(post,index){
+
+			if(post.pid==cart.pid){%>
+			<hr>
+	<div class="item row">
+		<div class="hidden"><%=cart.pid%></div>
+		<div class="col-xs-4">
+		<img  src=<%=post.pic%> class="img-responsive">
+		</div>
+		<div class="col-xs-6">
+			<div class="brand"><%=post.brand%></div>
+			<br>
+			<br>
+			<%=post.name%>
+		</div>
+		<div class="col-xs-2">
+		<br>
+			<br>
+		<div class="tips"><%=cart.amount%></div>
+		</div>
+	</div>
+	<%}})})}%>
+<%})}%>
+
+
+<%- include footer%>
+
+
+
+

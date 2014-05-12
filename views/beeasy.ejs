@@ -1,0 +1,57 @@
+<%- include header%>
+<%- include welcome%>
+<%if(!locals.error){%>
+<div class="container">
+<div class="row">
+<div class="col-xs-12 col-md-8">
+<span class="tips help-block"><%if(locals.error){%><%=error%><%}%></span>
+<span class="tips help-block"><%if(locals.success){%><%=success%><%}%></span>
+<form method="post" enctype="multipart/form-data">
+						<div class="form-group">
+							 <label >店铺logo图片</label>
+<input type="file" name="pic"/>
+							<p class="help-block">
+								请上传jpg、png、gif格式的图片，大小别超过2M,为了保证界面美观，图片像素以宽高为 400*200为佳
+							</p>
+						</div>
+						<hr>
+						<div class="form-group">
+							 <label>店铺名称</label>
+<input type="text" class="form-control" name="name" maxlength="20" />
+						</div>
+						<hr>
+						
+						<div class="form-group">
+						<label>联系方式：</label>
+						<input type="text" class="form-control" name="contact" maxlength="20" />
+						</div>
+						<div class="form-group">
+						<label>支付宝收款地址：（例如EasyOTO官网：https://me.alipay.com/easyoto）</label>
+						<input type="text" class="form-control" name="email" maxlength="100" />
+						</div>
+						<div class="form-group">
+						<label>经营范围：</label>
+						<input type="text" class="form-control" name="whatsell" maxlength="20" />
+						</div>
+						<hr>
+						<div class="form-group">
+							 <label>店铺详细描述</label>
+							 <p class="help-block">
+								言简意赅，140字以内
+							</p>
+<textarea type="text" class="form-control" name="desp" maxlength="140"></textarea>
+						</div>
+						<hr>
+						
+						<button type="submit" class="btn btn-primary">申请店铺</button>
+						<div class="form-group">
+						 
+					</form>
+	</div>
+	</div>
+</div>
+<%}else{%>
+<h2>亲，您已经是老板了，就别在戏耍伦家了呢……</h2>
+<%}%>
+<%-include nav%>
+<%- include footer%>

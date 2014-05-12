@@ -1,0 +1,40 @@
+<%- include header%>
+<% if(user=="admin"){%>
+<form method="post" enctype="multipart/form-data">
+						<div class="form-group">
+							 <label>商品名称</label>
+<input type="text" class="form-control" name="title"  />
+						</div>
+						<div class="form-group">
+							 <label >上传图片</label>
+<input type="file" name="pic"/>
+							<p class="help-block">
+								Example block-level help text here.
+							</p>
+						</div>
+						<div class="form-group">
+							 <label>商品描述</label>
+<input type="text" class="form-control" name="desp"  />
+						</div>
+<button type="submit" class="btn btn-default">发布商品</button>
+						<div class="form-group">
+							 <label>商品价格</label>
+<input type="text" class="form-control" name="price"  />
+						</div>
+						<div class="form-group">
+						男性：
+						<input type="radio" checked="checked" name="sex" value="male" />
+						<br />
+						女性：
+						<input type="radio" name="sex" value="female" />
+						</div>
+						
+						 
+					</form>
+	<%}else{%>
+
+
+<%}%>
+	
+<%- include footer%>
+

@@ -1,0 +1,18 @@
+所有店铺展示
+
+<%shops.forEach(function(shop,index){%>
+<% if(shop.shoppic){%>
+<%=shop.shoppic%>
+<%}else{%>
+<img src="/uploads/xx.jpeg" class="img-reponsive" />
+<%}%>
+<%=shop.name%>
+<% if(shop.desp){%>
+<%=shop.desp%>
+<%}else{%>
+<p>店主很懒，还没有添加任何信息</p>
+<%}%>
+
+<%=shop.shopname%>
+
+<%})%>

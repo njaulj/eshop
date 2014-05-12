@@ -1,0 +1,52 @@
+<%- include header%>
+
+<div class="row clearfix"> 
+		<div class="col-md-12 column">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						热门专区
+					</h3>
+				</div>
+				<% posts.forEach(function(post,index){%>
+				<div class="panel-body">
+					
+						<div class="col-md-2 column">
+							<img width="140" height="140" alt="140x140" src=<%= post.pic %> />
+						</div>
+						<div class="col-md-6 column">
+							<h3>
+								<%= post.title %>
+							</h3>
+							<h6>
+								<%= post.price %>
+							</h6>
+							<h6>
+								<%= post.desp %>
+							</h6>
+						</div>
+						<div class="col-md-4 column">
+					
+							
+						
+								
+							<input class="min"  type="button" value="-" />
+								
+							<input type="text" maxlength="10" value="4" />
+								
+							<input class="add" name=" type="button" value="+" />
+								
+							
+						</div>
+					
+				</div>
+				<% })%>
+				<div class="panel-footer">
+					Panel footer
+				</div>
+			
+		</div>
+	</div>
+</div>
+
+<%- include footer%>

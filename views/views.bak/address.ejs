@@ -1,0 +1,134 @@
+<%- include header%>
+
+<script>
+$(function(){
+
+
+$("#submit").click(function(){
+
+var data={};
+data.ip=$("#ip").val();
+data.who=$("#who").val();
+data.phone=$("#phone").val();
+
+$.ajax({
+type:"POST",
+data:JSON.stringify(data),
+contentType: 'application/json',
+url:"/address",
+success:function(){
+
+$("table tbody").append("<tr><td>"+data.ip+"</td><td>"+data.who+"</td><td>"+data.phone+"</td><td></td></tr>");
+}
+
+
+
+});
+
+
+});
+
+
+$(".delete").click(function(){
+
+var data={};
+data.ip=$(this).parent().prev().prev().prev().text();
+data.who=$(this).parent().prev().prev().text();
+data.phone=$(this).parent().prev().text();
+
+
+$.ajax({
+type:"POST",
+data:JSON.stringify(data),
+contentType: 'application/json',
+url:"/address/del"
+
+
+});
+
+$(this).parent().parent().remove();
+
+
+
+});
+
+
+});
+
+
+
+</script>
+
+
+
+
+<div class="row">
+<table class="table table-striped table-hover">
+<thead>
+<tr>
+<td>收货地址</tdr>
+<td>收件人</td>
+<td>联系方式</td>
+<td>操作</td>
+</tr>
+</thead>
+<tbody>
+<% adds.forEach(function(add,index){%>
+<tr>
+<td class="center"><%= add.ip%></td>
+<td class="center"><%= add.who%></td>
+<td class="center"><%= add.phone%></td>
+<td class="center">
+	<a class="delete btn btn-danger" href="#">
+		<i class="icon-trash icon-white"></i> 
+		Delete
+		</a>
+</td>
+</tr>
+<%})%>
+
+</tbody>
+
+</table>
+</div>
+
+
+
+<div class="row">
+
+<div class="control-group success">
+	<h4>新增收获地址</h4>
+	<label class="control-label" for="ip">收获地址</label>
+								<div class="controls">
+								  <input type="text" id="ip" name="ip">
+								  <span class="help-inline">江苏省XX市</span>
+								</div>
+							  </div>
+ <div class="control-group success">
+	<label class="control-label"  for="who">收件人</label>
+								<div class="controls">
+								  <input type="text" id="who" name="who">
+								  <span class="help-inline">王五、大飞</span>
+								</div>
+							  </div>
+<div class="control-group success">
+	<label class="control-label"  for="phone">联系方式</label>
+								<div class="controls">
+								  <input type="text" id="phone" name="phone">
+								  <span class="help-inline">138,139000</span>
+								</div>
+							  </div>
+<div class="form-actions">
+  <button type="submit" id="submit" class="btn btn-default">添加</button>
+
+
+</div>
+
+</div>
+
+
+<%- include footer%>
+
+
+
+

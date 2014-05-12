@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eshop</title>
+<link rel="stylesheet" href="http://cdn.bootcss.com/twitter-bootstrap/3.0.3/css/bootstrap.min.css">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="http://cdn.bootcss.com/twitter-bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script>
+$(function(){
+	$(".add").click(function(){		
+		var c1=parseInt($(this).prev().val());
+		$(this).prev().val(c1+1);
+		
+	})
+	$(".min").click(function(){
+		var c1=parseInt($(this).next().val());
+		$(this).next().val(c1-1);
+		
+	})
+	
+})
+</script>
+</head>
+
+
+<body>
+	<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<div class="carousel" >
+				<div class="carousel-inner">
+					<div class="item active">
+						<img alt="" src="/images/logo.jpg" />
+						<div class="carousel-caption">
+							<h1>
+								First Thumbnail label
+							</h1>
+							<p>
+								Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.
+							</p>
+						</div>
+						
+					</div>
+					
+					
+				</div> 
+
+			</div>
+
+			<div class="row clearfix">
+				<div class="col-md-12 column">
+					<h3 class="text-left text-success">
+						<%= title%>
+					</h3>
+
+					<h6 class="text-left text-success">
+						<% if (locals.success) { %>
+						  <div ><%= locals.success %></div>
+						<% } %>
+						<% if (locals.error) { %>
+						  <div><%= locals.error %> </div>
+						<% } %>
+					</h6>
+				</div>
+			</div>
+					
+
+			
+

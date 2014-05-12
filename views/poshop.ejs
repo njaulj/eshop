@@ -1,0 +1,101 @@
+<%-include header%>
+<%-include welcome%>
+<%if(locals.success){%>
+<span class="tips"><%=success%></span>
+<%}%>
+<%if(!locals.error){%>
+<%- include shopnav%>
+<div class="container">
+<div class="row">
+				<div class="col-xs-12">
+					<span class="tips">商品发布：</span>
+				</div>
+			</div>
+	<div class="row">
+	<hr>
+		<div class="col-xs-12">
+			<form method="post" enctype="multipart/form-data">
+						<div class="form-group">
+							 <label>商品名称</label>
+<input type="text" class="form-control" name="title" maxlength="20" />
+						</div>
+						<hr>
+						<div class="form-group">
+							 <label >上传图片</label>
+<input type="file" name="pic"/>
+							<p class="help-block">
+								请上传jpg、png、gif格式的图片，大小别超过2M,为了保证界面美观，普通图片像素以宽高为 200*200为佳，主推商品的广告位的像素以宽高为400*200为佳
+							</p>
+						</div>
+						<hr>
+						<label>品牌分类</label>
+						<p class="help-block">
+								商户自定义，精准的商品分类可以让消费者更快的定位到您的商品哦，比如 佳能数码照相机的三级分类可参照 电子消费－数码相机－佳能（canoe）
+							</p>
+						<div class="form-group">
+						<label>品牌一级分类</label>
+						<input type="text" class="form-control" name="fbrand" maxlength="20" />
+						</div>
+						<div class="form-group">
+						<label>品牌二级分类</label>
+						<input type="text" class="form-control" name="mbrand" maxlength="20" />
+						</div>
+						<div class="form-group">
+						<label>品牌三级分类</label>
+						<input type="text" class="form-control" name="lbrand" maxlength="20" />
+						</div>
+						<hr>
+						<div class="form-group">
+							 <label>商品描述</label>
+							 <p class="help-block">
+								言简意赅，40字以内
+							</p>
+<input type="text" class="form-control" name="desp" maxlength="40" />
+						</div>
+						<hr>
+						<div class="form-group">
+							 <label>商品详细描述</label>
+							 <p class="help-block">
+								商品参数、功能、规格可在此说明，其中上传网络图片的宽高，最好设定宽高为300*150
+							</p>
+<textarea name="ldesp" rows="5" class="form-control" ></textarea>
+							<hr>
+						</div>
+
+
+
+						
+						<div class="form-group">
+							 <label>商品价格</label>
+							<input type="text" class="form-control" name="price"  />
+						</div>
+						<div class="form-group">
+							 <label>商品进货价格</label>
+							<input type="text" class="form-control" name="iprice"  />
+						</div>
+						<hr>
+						<div class="form-group">
+						普通商品：
+						<input type="radio" checked="checked" name="state" value=1 />
+						<hr>
+						明星商品：（可在店铺的广告位中显示）
+						<input type="radio"  name="state" value=2 />
+						</div>
+						<button type="submit" class="btn btn-default">发布商品</button>
+						<div class="form-group">
+						 
+					</form>
+
+		</div>
+
+	</div>
+
+
+</div>
+
+
+<%}else{%>
+<h2>权限不够</h2>
+<%}%>
+<%-include nav%>
+<%-include footer%>

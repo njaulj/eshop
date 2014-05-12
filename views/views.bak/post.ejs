@@ -1,0 +1,88 @@
+<%- include header%>
+<% if(role==2){%>
+<div class="row">
+<div class="visible-md col-md-4">
+<%- include ad%>
+</div>
+<div class="col-xs-12 col-md-8">
+<span class="tips help-block"><%if(locals.error){%><%=error%><%}%></span>
+<span class="tips help-block"><%if(locals.success){%><%=success%><%}%></span>
+<form method="post" enctype="multipart/form-data">
+						<div class="form-group">
+							 <label>商品名称</label>
+<input type="text" class="form-control" name="title" maxlength="20" />
+						</div>
+						<hr>
+						<div class="form-group">
+							 <label >上传图片</label>
+<input type="file" name="pic"/>
+							<p class="help-block">
+								请上传jpg、png、gif格式的图片
+							</p>
+						</div>
+						<hr>
+						<div class="form-group">
+						<label>品牌一级分类</label>
+						<input type="text" class="form-control" name="fbrand" maxlength="20" />
+						</div>
+						<div class="form-group">
+						<label>品牌二级分类</label>
+						<input type="text" class="form-control" name="mbrand" maxlength="20" />
+						</div>
+						<div class="form-group">
+						<label>品牌三级分类</label>
+						<input type="text" class="form-control" name="lbrand" maxlength="20" />
+						</div>
+						<hr>
+						<div class="form-group">
+							 <label>商品描述</label>
+							 <p class="help-block">
+								言简意赅，40字以内
+							</p>
+<input type="text" class="form-control" name="desp" maxlength="40" />
+						</div>
+						<hr>
+						<div class="form-group hidden">
+							 <label>商品详细描述</label>
+							 <p class="help-block">
+								详细列举该商品的各类信息
+							</p>
+<textarea name="ldesp" rows="5" class="form-control" ></textarea>
+							<hr>
+						</div>
+
+
+
+						
+						<div class="form-group">
+							 <label>商品价格</label>
+							<input type="text" class="form-control" name="price"  />
+						</div>
+						<div class="form-group">
+							 <label>商品进货价格</label>
+							<input type="text" class="form-control" name="iprice"  />
+						</div>
+						<hr>
+						<div class="form-group">
+						普通商品：
+						<input type="radio" checked="checked" name="show" value=1 />
+						<hr>
+						明星商品：（可在店铺的广告位中显示）
+						<input type="radio"  name="show" value=2 />
+						</div>
+						<button type="submit" class="btn btn-default">发布商品</button>
+						<div class="form-group">
+						 
+					</form>
+	</div>
+	</div>
+	<%}else{%>
+	<span class="tips help-block">嗨，只有注册的BOSS才能发布商品哦！</span>
+	<%- include ad%>
+	
+	<%}%>
+
+
+
+<%- include footer%>
+

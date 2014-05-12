@@ -1,0 +1,90 @@
+<%- include header%>
+
+<script>
+function addadd(){
+
+var params={
+
+"ip":$("#ip").val(),
+"who":$("#who").val(),
+"phone":$("#phone").val()
+
+};
+
+$.ajax({
+url:"/address",
+type:"post",
+data:params,
+datatype:'json',
+success:function(data){
+alert(json.stringify(data));
+},
+
+});
+};
+</script>
+
+<div class="row">
+<table class="table table-striped table-hover">
+<thead>
+<tr>
+<td>收货地址</tdr>
+<td>收件人</td>
+<td>联系方式</td>
+</tr>
+</thead>
+<tbody>
+<% post.adds.forEach(function(user,index){%>
+<tr>
+<td><%= user.ip%></td>
+<td><%= user.who%></td>
+<td><%= user.phone%></td>
+</tr>
+<%})%>
+
+</tbody>
+
+</table>
+</div>
+
+
+
+<div class="row">
+
+<form class="form">
+<div class="control-group success">
+	<h4>新增收获地址</h4>
+	<label class="control-label" for="ip">收获地址</label>
+								<div class="controls">
+								  <input type="text" id="ip">
+								  <span class="help-inline">江苏省XX市</span>
+								</div>
+							  </div>
+ <div class="control-group success">
+	<label class="control-label" for="who">收件人</label>
+								<div class="controls">
+								  <input type="text" id="who">
+								  <span class="help-inline">王五、大飞</span>
+								</div>
+							  </div>
+<div class="control-group success">
+	<label class="control-label" for="phone">联系方式</label>
+								<div class="controls">
+								  <input type="text" id="phone">
+								  <span class="help-inline">138,139000</span>
+								</div>
+							  </div>
+<div class="form-actions">
+  <button type="submit" onclick="addadd()" class="btn btn-default">Sign in</button>
+
+
+</div>
+</form>
+
+</div>
+
+<%- include footer%>
+
+
+
+

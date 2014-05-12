@@ -1,0 +1,25 @@
+testUserManager
+
+所有用户管理
+
+
+<%users.forEach(function(user,index){%>
+<% if(user.headpic){%>
+<%=user.headpic%>
+<%}else{%>
+<img src="/uploads/xx.jpeg" class="img-reponsive" />
+<%}%>
+<%=user.name%>
+<% if(user.contact){%>
+<%=user.contact%>
+<%}else{%>
+<p>店主很懒，还没有添加任何信息</p>
+<%}%>
+
+<%=user.role%> 增加修改权限（点击，button ，变成老板）
+<%=user.ustate%>
+<%=user.total%>
+
+
+<%})%>
+

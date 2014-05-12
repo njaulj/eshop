@@ -1,0 +1,145 @@
+<%- include header%>
+<%- include welcome%>
+	<%if(!locals.error){%>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+						<span class="tips">店铺状态：</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+			<div class="btn-group">
+						<li class="badge" style="background-color:green">
+							<a style="color:white" href="/beeasyadmin/1">运营中的商铺</a>
+						</li>
+						<li class="badge"  style="background-color:#FF7F00">
+							<a style="color:white"  href="/beeasyadmin/2"><i class="fa fa-fire"></i>申请中的店铺</a>
+						</li>
+						<li class="badge"  style="background-color:blue">
+							<a style="color:white"  href="/beeasyadmin/3"><i class="fa fa-times-circle"></i>异常状态的店铺</a>
+						</li>
+			</div>
+			
+		</div>
+	</div>
+	<div class="container">
+	<hr>
+	<script>
+$(function(){
+
+			$(".close").click(function(){
+
+				var holder=$(this);
+					var shop={};
+					shop.uid=parseInt($(this).prev().prev().text());
+				 	$.ajax({
+					type:"POST",
+					data:JSON.stringify(shop),
+					contentType:'application/json',
+					url:"/shopclose",
+					success:function(data){
+									
+								holder.parent().parent().remove();
+						
+					}
+					});
+
+
+			});
+
+			$(".ok").click(function(){
+
+				var holder=$(this);
+					var shop={};
+					shop.uid=parseInt($(this).prev().prev().text());
+				 	$.ajax({
+					type:"POST",
+					data:JSON.stringify(shop),
+					contentType:'application/json',
+					url:"/shopok",
+					success:function(data){
+									
+								holder.parent().parent().remove();
+						
+					}
+					});
+
+
+			});
+
+			$(".open").click(function(){
+
+				var holder=$(this);
+					var shop={};
+					shop.uid=parseInt($(this).prev().prev().text());
+				 	$.ajax({
+					type:"POST",
+					data:JSON.stringify(shop),
+					contentType:'application/json',
+					url:"/shopopen",
+					success:function(data){
+									
+								holder.parent().parent().remove();
+						
+					}
+					});
+
+
+			});
+
+
+
+});
+</script>
+	<%shops.forEach(function(shop,index){var ostate="";
+	switch(shop.sstate){
+		case 1:
+		ostate="运营中";
+		break;
+		case 2:
+		ostate="申请中";
+		break;
+		case 3:
+		ostate="封铺了";
+		break;
+		default:
+		ostate="店铺出现异常";
+}%>
+	<div class="row">
+		<div class="col-xs-3">
+		<img src=<%=shop.shoppic%> class="img-responsive">
+		</div>
+		<div class="col-xs-6">
+		<%=shop.shopname%>
+		</div>
+		<div class="col-xs-3">
+			<div class="hidden"><%=shop.uid%></div>
+			<%if(shop.sstate==1){%>
+			<span style="color:#008000"><%=ostate%></span>
+			<button class="close btn btn-danger">封铺</button>
+			<%}%>
+			<%if(shop.sstate==2){%>
+			<span style="color:#FF7F00"><%=ostate%></span>
+			<button class="ok btn btn-success">通过</button>
+			<%}%>
+			<%if(shop.sstate==3){%>
+			<span style="color:#0000FF"><%=ostate%></span>
+			<button class="open btn btn-warning">开启</button>
+			<%}%>
+		</div>
+
+	</div>
+	<hr>
+	<%})%>
+	</div>
+
+
+
+<%- include page%>
+<%}else{%>
+<h2>亲，这里不是一般人能够进来的哟</h2>
+<%}%>
+
+<%- include nav%>
+<%- include footer%>

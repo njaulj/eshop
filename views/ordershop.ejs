@@ -1,0 +1,211 @@
+<%-include header%>
+<%-include welcome%>
+<%if(!locals.error){%>
+<%- include shopnav%>
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12">
+			<span class="tips">订单状态：</span>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+		<div class="btn-group">
+					<li class="badge" style="background-color:green">
+						<a style="color:white" href="/ordershop/1">待处理</a>
+					</li>
+					<li class="badge"  style="background-color:#FF7F00">
+						<a style="color:white"  href="/ordershop/2">待发货</a>
+					</li>
+					<li class="badge"  style="background-color:blue">
+						<a style="color:white"  href="/ordershop/3">已发货</a>
+					</li>
+					<li class="badge"  style="background-color:#EE7AE9">
+						<a style="color:white"  href="/ordershop/4">已收货</a>
+					</li>
+					<li class="badge"  style="background-color:red">
+						<a style="color:white"  href="/ordershop/5">已付款</a>
+					</li>
+					<li class="badge"  style="background-color:red">
+						<a style="color:white"  href="/ordershop/6">已取消</a>
+					</li>
+		</div>
+		
+	</div>
+</div>
+<script>
+$(function(){
+			
+			$('.detail').unbind("click");
+			$(".detail").click(function(){
+
+				var holder=$(this);
+					var order={};
+					order.oid=parseInt($(this).next().text());
+
+				 	$.ajax({
+					type:"POST",
+					data:JSON.stringify(order),
+					contentType:'application/json',
+					url:"/orderwho",
+					success:function(data){
+									
+								alert("<地址>"+data.ip+"<联系人>"+data.who+"<联系方式>"+data.phone);
+						
+					}
+					});
+
+
+			});
+	
+			$('.process').unbind("click");
+			$(".process").click(function(){
+
+				var holder=$(this);
+					var order={};
+					order.oid=parseInt($(this).prev().text());
+
+				 	$.ajax({
+					type:"POST",
+					data:JSON.stringify(order),
+					contentType:'application/json',
+					url:"/orderprocess",
+					success:function(data){
+									
+								holder.parent().parent().parent().remove();
+						
+					}
+					});
+
+
+			});
+
+			$('.back').unbind("click");
+			$(".back").click(function(){
+
+				var holder=$(this);
+					var order={};
+					order.oid=parseInt($(this).prev().text());
+
+				 	$.ajax({
+					type:"POST",
+					data:JSON.stringify(order),
+					contentType:'application/json',
+					url:"/orderback",
+					success:function(data){
+									
+								holder.parent().parent().parent().remove();
+						
+					}
+					});
+
+
+			});
+
+
+
+			$('.trash').unbind("click");
+			$(".trash").click(function(){
+
+			
+				var holder=$(this);
+					var order={};
+					order.oid=parseInt($(this).prev().prev().text());
+				 	$.ajax({
+					type:"POST",
+					data:JSON.stringify(order),
+					contentType:'application/json',
+					url:"/ordertrash",
+					success:function(data){
+									
+								holder.parent().parent().parent().remove();
+						
+					}
+					});
+
+
+			});
+
+
+});
+</script>
+
+<div id="orders" class="container">
+
+<div id="orders">
+<%if(orders && orders.length>0){orders.forEach(function(order,index){var ostate="";
+	switch(order.state){
+		case 1:
+		ostate="用户下单，等待卖家处理";
+		break;
+		case 2:
+		ostate="卖家确认，准备商品";
+		break;
+		case 3:
+		ostate="快递派送中";
+		break;
+		case 4:
+		ostate="用户已收货";
+		break;
+		case 5:
+		ostate="用户已付款";
+		break;
+		case 6:
+		ostate="订单已取消";
+		break;
+		default:
+		ostate="订单出现未知错误";
+}%>
+	
+	<div class="orderitem">
+	<hr>
+	
+	<div class="info row">
+		<div class="col-xs-8"><%=order.time.minute%></div>
+		<div class="col-xs-4"><strong>总价¥:</strong><strong class="eachordertotal"><%= order.amount*order.price%></strong></div>
+	</div>
+	<hr>
+	<div class="item row">
+		<div class="hidden"><%=order.pid%></div>
+		<div class="col-xs-4">
+		<img  src=<%=order.pic%> class="img-responsive">
+		</div>
+		<div class="col-xs-8">
+			<div class="name"><a href="/p/<%=order.pid%>"><%=order.name%></a> <span class="pull-right">数量: <%=order.amount%></span></div>
+			<br>
+			<h6>单价 ¥ <%=order.price%></h6>
+			<%if(order.state==4){%>
+			<a href="/p/<%=order.pid%>" class="tips pull-right"><i class="fa fa-comments-o"></i>评价</a>
+
+			<%}%>
+			<h6>状态:<span style="color:#1E90FF;"><%=ostate%></span></h6>
+			<button class="detail btn btn-warning">买家信息</button>
+			<div class="hidden"><%=order.oid%></div>
+			<%if(order.state<5){%>
+			<button class="process btn btn-success">处理</button>
+			<%}%>
+			<%if(order.state<3){%>
+			<button class="trash btn btn-danger">废弃</button>
+			<%}%>
+			<%if(order.state==6){%>
+			<button class="back btn btn-info">重新恢复</button>
+			<%}%>
+
+		</div>
+	</div>
+	</div>
+	<%})}%>
+
+</div>
+
+
+
+</div>
+
+
+<%-include page%>
+<%}else{%>
+<h2>权限不够</h2>
+<%}%>
+<%-include nav%>
+<%-include footer%>

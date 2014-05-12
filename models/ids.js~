@@ -1,0 +1,16 @@
+var mongodb=require('./db');
+function ids(tablename, id) {
+    this.id = id;
+    this.tablename = tablename;
+}
+module.exports = ids;
+ids.getId = function (tablename, callback) {
+    mongodb.open(function (err, db) {
+    db.collection('ids', function (err, collection) {
+        collection.findAndModify({"name":tablename}, [], {$inc:{'id':1}}, {new:true, upsert:true}, function (err, doc) {
+            mongodb.close();
+            callback(doc.id);
+            });
+        });
+    });
+}

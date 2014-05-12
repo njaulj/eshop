@@ -1,0 +1,124 @@
+<%-include header%>
+<%-include welcome%>
+<hr>
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12">
+		<div class="btn-group">
+			<li class="badge" style="background-color:green">
+						<a style="color:white" href="/order/1">待处理</a>
+					</li>
+					<li class="badge"  style="background-color:#FF7F00">
+						<a style="color:white"  href="/order/2">待发货</a>
+					</li>
+					<li class="badge"  style="background-color:blue">
+						<a style="color:white"  href="/order/3">已发货</a>
+					</li>
+					<li class="badge"  style="background-color:#EE7AE9">
+						<a style="color:white"  href="/order/4">已收货</a>
+					</li>
+					<li class="badge"  style="background-color:red">
+						<a style="color:white"  href="/order/5">已付款</a>
+					</li>
+					<li class="badge"  style="background-color:red">
+						<a style="color:white"  href="/order/6">已取消</a>
+					</li>
+		</div>
+		</div>
+	</div>
+</div>
+<div id="orders" class="container">
+	<div class="row">
+<span class="tips help-block"><strong>目前您共消费了：¥</strong><strong id="total"><%=total.toFixed(2)%></strong></span>
+</div>
+<script>
+	$(function(){
+
+
+			$('.detail').unbind("click");
+			$(".detail").click(function(){
+
+				var holder=$(this);
+					var order={};
+					order.oid=parseInt($(this).next().text());
+
+				 	$.ajax({
+					type:"POST",
+					data:JSON.stringify(order),
+					contentType:'application/json',
+					url:"/orderdetail",
+					success:function(data){
+									
+								alert("<卖家>"+data.seller+"<联系方式>"+data.contact);
+						
+					}
+					});
+
+
+			});
+
+
+});
+</script>
+
+<div id="orders">
+<%if(orders && orders.length>0){orders.forEach(function(order,index){var ostate="";
+	switch(order.state){
+		case 1:
+		ostate="用户下单，等待卖家处理";
+		break;
+		case 2:
+		ostate="卖家确认，准备商品";
+		break;
+		case 3:
+		ostate="快递派送中";
+		break;
+		case 4:
+		ostate="用户已收货";
+		break;
+		case 5:
+		ostate="用户已付款";
+		break;
+		case 6:
+		ostate="订单已取消";
+		break;
+		default:
+		ostate="订单出现未知错误";
+}%>
+	<hr>
+	<div class="hidden"><%=order.oid%></div>
+	<div class="info row">
+		<div class="col-xs-8"><%=order.time.minute%></div>
+		<div class="col-xs-4"><strong>总价¥:</strong><strong class="eachordertotal"><%= order.amount*order.price%></strong></div>
+	</div>
+	<hr>
+	<div class="item row">
+		<div class="hidden"><%=order.pid%></div>
+		<div class="col-xs-4">
+		<img  src=<%=order.pic%> class="img-responsive">
+		</div>
+		<div class="col-xs-8">
+			<div class="name"><a href="/p/<%=order.pid%>"><%=order.name%></a> <span class="pull-right">数量: <%=order.amount%></span></div>
+			<br>
+			<h6>单价 ¥ <%=order.price%></h6>
+			<%if(order.state==4){%>
+			<a href="/p/<%=order.pid%>" class="badge pull-right"><i class="fa fa-comments-o"></i>评价</a>
+			<a href="/pay/<%=order.oid%>" class="badge pull-right">$支付宝付款</a>
+			<%}%>
+			<button class="detail btn btn-warning">联系老板</button>
+			<div class="hidden"><%=order.oid%></div>
+			<h6>状态:<span style="color:#1E90FF;"><%=ostate%></span></h6>
+		</div>
+	</div>
+	<%})}%>
+
+</div>
+
+
+
+</div>
+
+
+<%-include page%>
+<%-include nav%>
+<%-include footer%>

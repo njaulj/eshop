@@ -1,0 +1,282 @@
+<%- include header%>
+  
+<div class="cart row">
+<table class="table">
+<thead>
+<th>购物车</th>
+</thead>
+<script>
+$(function(){
+
+
+$(".del").click(function(){
+
+var data={};
+data.pic=$(this).parent().parent().children("td.pic").children("img").attr("src");
+data.pname=$(this).parent().parent().children("td.pname").text();
+data.amount=parseInt($(this).prev().prev().val());
+data.price=parseInt($(this).parent().parent().next().children("td").text());
+data.state="watch";
+
+$.ajax({
+type:"POST",
+data:JSON.stringify(data),
+contentType: 'application/json',
+url:"/cart/del"
+});
+
+$(this).parent().parent().parent().remove();
+
+
+
+
+});
+
+
+$(".plus").click(function(){
+var num=parseInt($(this).prev().val());
+
+var data={};
+data.pname=$(this).parent().parent().children("td.pname").text();
+data.amount=num+1;
+
+
+$.ajax({
+type:"POST",
+data:JSON.stringify(data),
+contentType: 'application/json',
+url:"/cart/modify"
+});
+$(this).prev().val(num+1);
+
+});
+
+
+$(".minus").click(function(){
+var num=parseInt($(this).next().val());
+
+
+
+if(num>1){
+var data={};
+data.pname=$(this).parent().parent().children("td.pname").text();
+data.amount=num-1;
+
+$.ajax({
+type:"POST",
+data:JSON.stringify(data),
+contentType: 'application/json',
+url:"/cart/modify"
+});
+$(this).next().val(num-1);
+
+}
+
+});
+});
+</script>
+				
+					
+
+<% carts.forEach(function(cart,index){ 
+var color=index%3;
+var bcolor="";
+if (color==0) bcolor="danger";
+if(color==1) bcolor="success";
+if(color==2) bcolor="warning";
+
+%><tbody>
+<tr class=<%= bcolor%>>
+<td class="pic" rowspan=2><img width="80px" height="80px" src=<%= cart.pic%> /></td>
+<td class="pname" colspan=2><%= cart.pname%></td>
+<td  rowspan=2><button class="minus btn-success"><i class="fa fa-minus-circle fa-2x fa-fw"></i></button> <input type="text" class="amount" size="2" value=<%= cart.amount%>></input><button class="plus btn-danger"> <i class="fa fa-plus-circle fa-2x fa-fw"></i></button><button class="del btn-warning"> <i class="fa fa-trash-o fa-2x fa-fw"></i></button>           
+		
+</td>
+</tr>
+<tr class=<%= bcolor%>>
+<td class="price" colspan=2><%= cart.price%><em>元</em></td>
+</tr></tbody>
+<%})%>
+
+
+</table>
+</div>
+
+<script>
+$(function(){
+
+
+
+
+
+$("#submit").click(function(){
+
+var data={};
+data.ip=$("#ip").val();
+data.who=$("#who").val();
+data.phone=$("#phone").val();
+
+$.ajax({
+type:"POST",
+data:JSON.stringify(data),
+contentType: 'application/json',
+url:"/address",
+success:function(){
+
+$(".address tbody").append("<tr><td class='center'>"+"<input type='radio' name='getadds'><ins></ins></input>"+"</td><td class='center'>"+data.ip+"</td><td class='center'>"+data.who+"</td><td>"+data.phone+"</td><td class='center'>"+"<button class='delete btn btn-danger'>"+"<i class='fa fa-trash-o'></i></button>"+"</td></tr>");
+
+
+$(".delete").click(function(){
+var data={};
+data.ip=$(this).parent().prev().prev().prev().text();
+data.who=$(this).parent().prev().prev().text();
+data.phone=$(this).parent().prev().text();
+
+
+$.ajax({
+type:"POST",
+data:JSON.stringify(data),
+contentType: 'application/json',
+url:"/address/del"
+});
+
+$(this).parent().parent().remove();
+
+
+});
+
+
+}
+
+
+
+});
+
+
+});
+
+
+$(".delete").click(function(){
+
+var data={};
+data.ip=$(this).parent().prev().prev().prev().text();
+data.who=$(this).parent().prev().prev().text();
+data.phone=$(this).parent().prev().text();
+
+
+$.ajax({
+type:"POST",
+data:JSON.stringify(data),
+contentType: 'application/json',
+url:"/address/del"
+});
+
+$(this).parent().parent().remove();
+
+
+});
+
+
+
+$(".order").click(function(){
+var data={};
+var s=$('input:radio[name="getadds"]:checked');
+data.ip=$(s).parent().next().text();
+data.who=$(s).parent().next().next().text();
+data.phone=$(s).parent().next().next().next().text();
+
+$.ajax({
+type:"POST",
+data:JSON.stringify(data),
+contentType: 'application/json',
+url:"/order"
+});
+
+$(".cart").remove();
+
+});
+
+
+});
+
+
+
+</script>
+
+
+
+
+
+<div class="row">
+<table class="address table table-striped table-hover">
+<thead>
+<tr>
+<td>选择</td>
+<td>收货地址</tdr>
+<td>收件人</td>
+<td>联系方式</td>
+<td>操作</td>
+</tr>
+</thead>
+<tbody>
+<% adds.forEach(function(add,index){%>
+<tr>
+<td><input type="radio" name="getadds"><ins></ins></input></td>
+<td class="center"><%= add.ip%></td>
+<td class="center"><%= add.who%></td>
+<td class="center"><%= add.phone%></td>
+<td class="center">
+	<button class="delete btn btn-danger">
+		<i class="fa fa-trash-o"></i> 
+		</button>
+</td>
+</tr>
+<%});%>
+
+</tbody>
+
+</table>
+</div>
+
+
+
+<div class="row">
+
+<div class="control-group success">
+	<h4>新增收货地址</h4>
+	<label class="control-label" for="ip">收货地址</label>
+								<div class="controls">
+								  <input type="text" id="ip" name="ip">
+								  <span class="help-inline">江苏省XX市</span>
+								</div>
+							  </div>
+ <div class="control-group success">
+	<label class="control-label"  for="who">收件人</label>
+								<div class="controls">
+								  <input type="text" id="who" name="who">
+								  <span class="help-inline">王五、大飞</span>
+								</div>
+							  </div>
+<div class="control-group success">
+	<label class="control-label"  for="phone">联系方式</label>
+								<div class="controls">
+								  <input type="text" id="phone" name="phone">
+								  <span class="help-inline">138,139000</span>
+								</div>
+							  </div>
+<div class="form-actions">
+  <button type="submit" id="submit" class="btn btn-success">添加</button>
+<a class="order btn btn-danger" href="#">生成订单</a>
+</div>
+
+
+</div>
+
+
+ 
+
+<%- include footer%>
+
+
+
+

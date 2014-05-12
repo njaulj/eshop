@@ -1,0 +1,182 @@
+<%- include header %>
+<script>
+$(function(){
+	
+
+var winH = $(window).height();
+			var i=2;
+	
+			$(window).scroll(function () { 
+				var pageH=$("body").height();
+				var scrollT = $(window).scrollTop();
+				var aa = (pageH-winH-scrollT)/winH;
+				
+				if(aa<0.02){
+				surl=window.location.href;
+				$.ajax({
+						type:"GET",
+						data:{page:i},
+						contentType:'application/json',
+						url:surl,
+						success:function(data){
+						if(data.comments.length>0){
+							
+							data.comments.forEach(function(comment,index){
+
+								var str="<div class=\"row\"><div class=\"col-xs-4 hidden\">"+comment.cmid+"</div><div class=\"col-xs-7\"><i class=\"fa fa-user fa-fw\"></i>"+comment.name+"</div><div class=\"col-xs-5\">"+comment.time+"</div></div><br><div class=\"row\"><div class=\"col-xs-2\"></div><div class=\"col-xs-10\">"+comment.content+"</div></div><hr>";
+
+							$("#comments").append(str);									
+							});	
+							i++;
+							}
+							else {
+							$("#commenttips").text("嗨，亲，已经到底了，人气多高啊");
+							return false;
+							}										
+						}
+
+						});
+					}
+			});
+
+
+
+
+	 $("#add").click(function(){
+		var holder=$(this);
+		var order={};
+		order.seller=$("#boss").text();
+	 	order.pid=parseInt($("#pid").text());
+	 	order.amount=0;
+	 	$.ajax({
+		type:"POST",
+		data:JSON.stringify(order),
+		contentType:'application/json',
+		url:"/cart",
+		success:function(data){
+			if(data.success==1){
+			holder.prop('disabled', true);
+			}
+		}
+		});
+
+	 });
+
+
+
+
+});
+</script>
+
+
+<div class="row">
+				<div class="col-xs-12">
+				<div id="boss" class="hidden"><%=post.boss%></div>
+				<div id="pid" class="hidden"><%=post.pid%></div>
+					<ul class="breadcrumb">
+				         <li>
+				        
+				            <a class="brand" href="/shop/<%=post.boss%>/fbrand/<%=post.fbrand%>"><%=post.fbrand%></a>
+				        
+				          </li>
+				          <li>
+				     		<a class="brand" href="/shop/<%=post.boss%>/fbrand/<%=post.fbrand%>/mbrand/<%=post.mbrand%>"><%=post.mbrand%></a>
+				          </li>
+				            <li>
+				     		<a class="brand" href="/shop/<%=post.boss%>/fbrand/<%=post.fbrand%>/mbrand/<%=post.mbrand%>/lbrand/<%=post.lbrand%>"><%=post.lbrand%></a>
+				          </li>
+			        </ul>
+				</div>
+
+
+</div>
+<div class="row">
+	<div class="col-xs-12">
+	<h4 ><a href="/p/<%=post.pid%>" class="pname"><%=post.name%></a></h4>
+	</div>
+	</div>
+	<div class="row">
+	<div class="col-xs-12">
+	<img class="img-responsive" src=<%=post.pic%> />
+	</div>
+	</div>
+	<hr>
+	<div class="row">
+	<div class="col-xs-12">
+	<strong>功效：</strong><%=post.desp%>
+	</div>
+	</div>
+	<hr>
+	<div class="row">
+	<div class="col-xs-12">
+	<strong>已售：</strong><%=post.sold%>
+	</div>
+	</div>
+	<hr>
+	<div class="row">
+	<div class="col-xs-12">
+	<strong>已有</strong><%=post.pv%><strong>人关注此商品！</strong>
+	</div>
+</div>
+	
+<hr>
+<div class="row">
+	<div class="col-xs-6">
+	<button id="add" class="btn btn-danger">加入购物车</button>
+	</div>
+	<div class="col-xs-6">
+	</div>
+</div>
+
+	<hr>
+	<h4 class="tips">用户体验</h4>
+	<hr>
+	<div id="comments">
+	<% if(comments.length>0){%>
+	<% comments.forEach(function(comment,index){ %>
+	<div class="row">
+	<div class="col-xs-4 hidden">
+	 <%= comment.cmid%>
+	 </div>
+	<div class="col-xs-7">
+	 	 <i class="fa fa-user fa-fw"></i><%= comment.name %>
+	 </div>
+	 <div class="col-xs-5">
+	 <%= comment.time%>
+	 </div>
+	 
+	 </div>
+	 <br>
+	 <div class="row">
+	 <div class="col-xs-2">
+
+	 </div>
+	 <div class="col-xs-10">
+	 	<%=comment.content%>
+	 </div>
+	 </div>
+	 <hr>
+	<% }) %>
+	<%}else {%>
+		  <span id="commenttips" class="tips help-block">尚未有人评论，亲，快来坐沙发吧！</span>
+	<%}%>
+	
+	</div>
+	<span id="commenttips" class="tips help-block"></span>
+	<hr>
+	<div class="row">
+	<div class="col-xs-12">
+	<% if(locals.user){ %>
+	<form method="post">
+	  姓名：<input type="text" name="name" value="<%= locals.user%>" /><br />
+	  <textarea name="content" rows="5" class="col-xs-12" maxlength="140"></textarea><br />
+	  <span class="tips help-block">亲，140字以内哦</span>
+	  <hr>
+	  <button type="summit" class="btn btn-primary" >我来说两句</button>
+	  </form>
+	<% } else { %>
+	  <span class="tips help-block">登录后才能评论哦？<a href="/login" >点击登录</a></span>
+	<% } %>
+	</div>
+</div>
+<%- include shopfooter %>

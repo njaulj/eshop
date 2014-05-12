@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scaleable=no">
+<title>Eshop</title>
+<link rel="stylesheet" href="./stylesheets/bootstrap.min.css">
+<link rel="stylesheet" href="./stylesheets/style.css">
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<script src="./javascripts/jquery.min.js"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="./javascripts/bootstrap.min.js"></script>
+
+<script>
+document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+WeixinJSBridge.call('hideToolbar');
+});
+
+</script>
+</head>
+
+
+<body>
+	<div class="container">
+
+			
+		
+
+
+				
+
+			
+			
+					
+
+			
+

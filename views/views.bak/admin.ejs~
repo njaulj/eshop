@@ -1,0 +1,63 @@
+<%- include header%>
+<% if(cuser=="admin"){%>
+<div class="row">
+<table class="table">
+<tbody>
+<% users.forEach(function(user,index){%>
+<% var x=user.orders;
+
+%>
+
+<% x.forEach(function(order,index){
+var y=order.carts;
+var color=index%3;
+var bcolor="";
+if (color==0) bcolor="danger";
+if(color==1) bcolor="success";
+if(color==2) bcolor="warning";
+%>
+
+<tr><td colspan="4"><b>用户：</b><%= user.name%><em>订单生成日期：</em><%= order.time.minute%></td></tr>
+<tr class=<%= bcolor%>>
+<td colspan="2">收货地址：<%= order.adds.ip%></td>
+<td>收件人：<%= order.adds.who%></td>
+<td>联系方式：<%= order.adds.phone%></td>
+</tr>
+<% y.forEach(function(car,index){
+%>
+
+<tr class=<%= bcolor%>>
+<td rowspan=2><img width="40px" height="40px" src=<%= car.pic%> /></td>
+<td class="pname" colspan=2><%= car.pname%></td>
+<td  rowspan=2>
+              <%= car.amount%>
+
+</td>
+</tr>
+<tr class=<%= bcolor%>>
+<td colspan=2><%= car.price%></td>
+
+</tr>
+
+</div>
+
+<%})%>
+
+<%})%>
+
+
+<%})%>
+
+</table>
+
+</div>
+<%- include paging %>
+<%}else{%>
+<P><div style="font:10em 'Microsoft YaHei' bold;text-align:center;padding-top:80px;">非管理员禁止入内！</div>
+
+<%}%>
+<%- include footer%>
+
+
+
+

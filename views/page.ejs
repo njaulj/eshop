@@ -1,0 +1,16 @@
+<br />
+<div id="page" class="container">
+	<div class="row">
+	<div class="col-xs-12">
+	<div class="pull-right">
+	  <% if(page-1){ %>
+	    <span><a title="上一页" href="?page=<%= page-1 %>">上一页</a></span>
+	  <% } %>
+
+	  <% if(length==9){ %>
+	    <span><a title="下一页" href="?page=<%= page+1 %>">下一页</a></span>
+	  <% } %>
+	  </div>
+	  </div>
+	  </div>
+</div>

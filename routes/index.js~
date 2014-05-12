@@ -1,0 +1,673 @@
+var crypto = require('crypto');
+var User = require('../models/n_user.js');
+var fs=require('fs');
+var Post=require('../models/n_post.js');
+var Address=require('../models/address.js');
+var Cart=require('../models/cart.js');
+var Order=require('../models/order.js');
+
+module.exports=function(app){
+//ad
+app.get('/ad',function(req,res){
+		
+		
+	});
+	
+
+//index
+	app.get('/',function(req,res){
+		Post.get(null,function(err,posts){
+		if(err){posts=[];console.log(posts);}
+		
+		res.render('index',{
+		title:'Express Iliujun',
+		user:req.session.user,
+		posts:posts,
+		success:req.flash('success').toString(),
+		error:req.flash('error').toString()
+
+	});
+	});
+	});
+
+//reg
+	app.get('/reg',checkNotLogin);
+	app.get('/reg',function(req,res){
+		res.render('reg',{
+		title:'注册',
+		user:req.session.user,
+		success:req.flash('success').toString(),
+		error:req.flash('error').toString()});
+	});
+	app.post('/reg',checkNotLogin);
+	app.post('/reg',function(req,res){
+		var name=req.body.name;
+		var password=req.body.password;
+		var password_re=req.body['password-repeat'];
+		if(password_re != password){
+			req.flash('error','两次输入的密码不一致');
+			return res.redirect('/reg');		
+		}
+		var md5=crypto.createHash('md5');
+		var password=md5.update(req.body.password).digest('hex');
+		var newUser= new User({
+		name:name,
+		password:password
+		});
+		console.log(newUser.name);
+		console.log(newUser.password);
+		User.get(newUser.name,function(err,user){
+		if (user){err='用户已存在';	
+			console.log("already in it");	
+			}
+		if(err){
+			console.log('something wrong');
+			req.flash('error',err);
+			return res.redirect('/reg');			
+			}
+		newUser.save(function(err){console.log("a");
+			if(err){
+console.log("b");req.flash('error',err);
+			return res.redirect('/reg');			
+			}
+			req.session.user=newUser.name;
+			req.flash('success','注册成功');
+			res.redirect('/');
+		
+		});
+		});
+
+	});
+
+//login
+	app.get('/login',checkNotLogin);
+	app.get('/login',function(req,res){
+		res.render('login',{title:'登录',
+		user:req.session.user,
+		success:req.flash('success').toString(),
+		error:req.flash('error').toString()});
+	});
+	app.post('/login',checkNotLogin);
+	app.post('/login',function(req,res){
+		var md5=crypto.createHash('md5');
+		var password=md5.update(req.body.password).digest('hex');
+		User.get(req.body.name,function(err,user){
+			if (!user)
+			{
+				req.flash('error','用户不存在');
+				return res.redirect('/login');	
+			}
+			if(user.password != password)
+			{
+				req.flash('error','密码错误！');
+				return res.redirect('/login');	
+			}
+			req.session.user=user.name;
+		//	req.flash('success','登录成功');
+			res.redirect('/');
+
+			});
+
+	});
+//post
+	app.get('/post',checkLogin);
+	app.get('/post',function(req,res){
+		res.render('post',{
+	title:'商品发布',
+	user:req.session.user,
+	success:req.flash('success').toString(),
+	error:req.flash('error').toString() 
+	});
+	});
+	app.post('/post',checkLogin);
+	app.post('/post',function(req,res){
+	var tmp_path=req.files.pic.path;
+	var target_path="./public/uploads/"+req.files.pic.name;
+	var req_path="/uploads/"+req.files.pic.name;
+	fs.rename(tmp_path,target_path,function(err){
+	if(err) throw err;
+	fs.unlink(tmp_path);
+	});	
+	var post=new Post(req.body.title,req_path,req.body.price,req.body.desp,req.body.sex);
+	post.save(function(err){
+	if(err){req.flash('error',err);return res.redirect('/');}	
+	req.flash('success','发布成功');
+	res.redirect('/');
+	
+	
+
+	});
+	
+	
+	});
+
+
+
+
+//mm
+	app.get('/mm',checkLogin);
+	app.get('/mm',function(req,res){
+		Post.get(null,function(err,posts){
+		if(err){posts=[];}
+		res.render('mm',{
+		title:'女士专区',
+		user:req.session.user,
+		posts:posts,
+		success:req.flash('success').toString(),
+		error:req.flash('error').toString()
+
+	});
+	});
+	
+	});
+	app.post('/mm',checkLogin);
+	app.post('/mm',function(req,res){
+
+	});
+
+//man
+	app.get('/man',checkLogin);
+	app.get('/man',function(req,res){
+		Post.get(null,function(err,posts){
+		if(err){posts=[];}
+		res.render('man',{
+		title:'男士专区',
+		user:req.session.user,
+		posts:posts,
+		success:req.flash('success').toString(),
+		error:req.flash('error').toString()
+
+	});
+	});
+	
+	});
+	app.post('/man',checkLogin);
+	app.post('/man',function(req,res){
+
+	});
+
+
+//logout
+	app.get('/logout',checkLogin);
+	app.get('/logout',function(req,res){
+		req.session.user=null;
+		req.flash('success','登出成功');
+		res.redirect('/');
+		
+	});
+
+//address
+
+	app.get('/address',checkLogin);
+	app.get('/address',function(req,res){
+	
+	Address.get(req.session.user,function(err,adds){
+		console.log(req.session.user);
+	if(!adds){req.flash('error','用户不存在');
+	 res.redirect('/');}
+	res.render('address',{
+		title:"收货地址",
+		adds:adds,
+		user:req.session.user,
+		success:req.flash('success').toString(),
+		error:req.flash('error').toString()
+	});
+});
+});
+	app.post('/address',checkLogin);
+	app.post('/address',function(req,res){
+	var ip=req.body.ip;
+	var who=req.body.who;
+	var phone=req.body.phone;
+	var address={"ip":ip,
+			"who":who,
+			"phone":phone};
+	console.log(address.ip);
+
+
+	var newAddress=new Address(req.session.user,address);
+	console.log(newAddress);
+
+	newAddress.save(function(err,adds){
+		 if(!adds){
+      req.flash('error',err); 
+      res.redirect('/');
+    }	
+	res.send({success:"ok"});
+	});
+
+});
+
+//remove address
+	app.post('/address/del',checkLogin);
+	app.post('/address/del',function(req,res){
+	var ip=req.body.ip;
+	var who=req.body.who;
+	var phone=req.body.phone;
+	var address={"ip":ip,
+			"who":who,
+			"phone":phone};
+	console.log(address.ip);
+
+
+	var newAddress=new Address(req.session.user,address);
+	console.log(newAddress);
+
+	newAddress.del(function(err,adds){
+		 if(!adds){
+      req.flash('error',err); 
+      res.redirect('/');
+    }	
+	console.log("good");
+	res.send({success:"ok"});
+	});
+
+});
+//admin
+
+	app.get('/admin',checkLogin);
+	app.get('/admin',function(req,res){
+  //判断是否是第一页，并把请求的页数转换成 number 类型
+  var page = req.query.p?parseInt(req.query.p):1;
+  //查询并返回第 page 页的10篇文章
+	Order.getTen(null, page, function(err, users){
+    if(err){
+      users = [];
+    } 
+    res.render('admin',{
+      title: '管理员后台管理',
+      user: req.session.user,
+      users: users,
+      page: page,
+      postsLen: users.length,
+      success: req.flash('success').toString(),
+      error: req.flash('error').toString()
+    });
+});
+});
+
+
+
+
+
+//order
+
+	app.get('/order',checkLogin);
+	app.get('/order',function(req,res){
+
+	User.get(req.session.user,function(err,users){
+
+	if(!users){req.flash('error','用户不存在');
+	 res.redirect('/');}
+	res.render('order',{
+		title:"您的订单",
+		user:req.session.user,
+		orders:users.orders,
+		success:req.flash('success').toString(),
+		error:req.flash('error').toString()
+	});
+});
+});
+
+	app.post('/order',checkLogin);
+	app.post('/order',function(req,res){
+	var ip=req.body.ip;
+	var who=req.body.who;
+	var phone=req.body.phone;
+	var adds={
+		"ip":ip,
+	"who":who,
+	"phone":phone
+};
+	
+	User.get(req.session.user,function(err,users){	
+		var date=new Date();
+		
+var time={date:date,
+	year:date.getFullYear(),
+	month:date.getFullYear()+"-"+(date.getMonth()+1),
+	day : date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate(),
+	minute : date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes()
+};
+
+		req.session.user=users.name;	
+		console.log(users.carts);
+		console.log(users.name);
+		var aorder={
+			"adds":adds,
+			"carts":users.carts,
+			"time":time
+			};
+		console.log(aorder);
+	var newOrder=new Order(req.session.user,aorder
+);
+	console.log(newOrder);
+	newOrder.save(function(err,users){
+		 if(!users){
+      req.flash('error',err); 
+      res.redirect('/');
+    }	
+	Cart.delall(req.session.user);
+	res.send({success:"ok"});
+		
+		
+		});
+	});
+	
+});
+
+
+
+//cart
+
+	app.get('/cart',checkLogin);
+	app.get('/cart',function(req,res){
+
+	User.get(req.session.user,function(err,users){
+
+	if(!users){req.flash('error','用户不存在');
+	 res.redirect('/');}
+	res.render('cart',{
+		title:"购物车",
+		user:req.session.user,
+		carts:users.carts,
+		adds:users.adds,
+		success:req.flash('success').toString(),
+		error:req.flash('error').toString()
+	});
+});
+});
+
+	app.post('/cart',checkLogin);
+	app.post('/cart',function(req,res){
+	var pname=req.body.pname;
+	var amount=req.body.amount;
+	var state=req.body.state;
+	var pic=req.body.pic;
+	var price=req.body.price;
+	var cart={"pname":pname,
+		"amount":amount,
+		"pic":pic,
+		"price":price,
+		"state":state};
+	console.log(cart);
+
+
+	var newCart=new Cart(req.session.user,cart);
+	
+
+	newCart.save(function(err,carts){
+		 if(!carts){
+      req.flash('error',err); 
+      res.redirect('/');
+    }	
+	console.log(carts);
+	res.send({success:"ok"});
+	});
+
+});
+
+
+//remove cart
+	app.post('/cart/del',checkLogin);
+	app.post('/cart/del',function(req,res){
+	var pname=req.body.pname;
+	var pic=req.body.pic;
+	var amount=req.body.amount;
+	var price=req.body.price;
+	var state=req.body.state;
+	var cart={"pname":pname,
+			"amount":amount,
+			"pic":pic,
+			"price":price,
+			"state":state};
+	console.log(cart.pname);
+
+
+	var newCart=new Cart(req.session.user,cart);
+	console.log(newCart);
+
+	newCart.del(function(err,carts){
+		 if(!carts){
+      req.flash('error',err); 
+      res.redirect('/');
+    }	
+	console.log("good");
+	res.send({success:"ok"});
+	});
+
+});
+	
+
+
+//modify cart
+
+	app.post('/cart/modify',checkLogin);
+	app.post('/cart/modify',function(req,res){
+	var pname=req.body.pname;
+	var amount=req.body.amount;
+	var cart={"pname":pname,
+			"amount":amount};
+	console.log(cart.pname);
+
+
+	var newCart=new Cart(req.session.user,cart);
+	console.log(newCart);
+
+	newCart.modify(function(err,carts){
+		 if(!carts){
+      req.flash('error',err); 
+      res.redirect('/');
+    }	
+	console.log("good");
+	res.send({success:"ok"});
+	});
+
+});
+
+
+//buy cart
+/*
+	app.post('/cart/buy',checkLogin);
+	app.post('/cart/buy',function(req,res){
+	var state="buy";
+	var cart={"state":state};
+	
+	var newCart=Cart(req.session.user,cart);
+	console.log(newCart);
+	newCart.buy(function(err,carts){
+		 if(!carts){
+      req.flash('error',err); 
+      res.redirect('/');
+    }	
+	console.log("good");
+	res.send({success:"ok"});
+	});
+
+});	
+*/
+//search
+
+
+app.get('/search', function(req,res){
+  Post.search(req.query.keyword, function(err, posts){
+
+    if(err){
+      req.flash('error',err); 
+      return res.redirect('/');
+    }
+	console.log(posts);
+    res.render('search',{
+      title: "SEARCH:"+req.query.keyword,
+      posts: posts,
+      user: req.session.user,
+      success: req.flash('success').toString(),
+      error: req.flash('error').toString()
+    });
+  });
+});
+
+
+//get one product
+
+app.get('/p/:name', function(req,res){
+  Post.getOne(req.params.name, function(err, post){
+    if(err){
+      req.flash('error',err); 
+      return res.redirect('/');
+    }
+	console.log(post);
+    res.render('product',{
+      title: req.params.name,
+      post: post,
+      user: req.session.user,
+      success: req.flash('success').toString(),
+      error: req.flash('error').toString()
+    });
+  });
+});
+
+//cart one product
+app.post('/p/:name',function(req,res){
+	var pname=req.params.pname;
+	var amount=req.body.amount;
+	var cart={"pname":pname,
+			"amount":amount};
+	console.log(cart.pname);
+	var newCart=new Cart(req.session.user,cart);
+	newCart.save(function(err){
+
+		 if(err){
+      req.flash('error',err); 
+      res.redirect('/');
+    }
+    req.flash('success', '添加成功!');
+    res.redirect('back');
+
+
+	});
+
+});
+
+
+//weixin get
+
+app.get('/weixin',function(req,res){
+var query=req.query;
+var token='weixin';
+console.log("signature:",query.signature);
+
+if(auth(token,query.timestamp,query.nonce,query.signature)){
+
+res.send(query.echostr);
+console.log('auth passed!')
+
+}
+else{
+console.log('auth failed!');
+res.send('auth failed');
+
+}
+
+
+});
+
+
+//weixin post
+
+
+
+app.post('/weixin',function(req,res){
+console.log(query);
+var token='weixin';
+console.log("signature:",query.signature);
+
+if(auth(token,query.timestamp,query.nonce,query.signature)){
+
+res.send(query.echostr);
+console.log('auth passed!')
+console.log(req.body.xml);
+
+}
+else{
+console.log('auth failed!');
+res.send('auth failed');
+
+}
+
+
+});
+
+//404
+
+//end of this function
+};
+
+//checkuserlogin status
+function checkLogin(req,res,next){
+if(!req.session.user){
+req.flash('error','未登录');
+return res.redirect('/login');
+}
+next();
+}
+
+
+function checkNotLogin(req,res,next){
+if(req.session.user){
+req.flash('error','已登录');
+return res.redirect('/');
+}
+next();
+}
+
+
+//auth
+
+
+function auth(token,timestamp,nonce,signature){
+var arr=[];
+arr.push(timestamp);
+arr.push(nonce);
+arr.push(token);
+
+
+var d=crypto.createHash('sha1').update(arr.sort().join('').toString()).digest('hex');
+
+if(d == signature)
+{
+return true;
+}
+
+else return false;
+
+}
+
+
+//processmessage
+
+function processMessage(data,response){
+
+var ToUserName="";
+var FromUserName="";
+var CreateTime="";
+var MsgType="";
+var Content="";
+var Location_X="";
+var Location_Y="";
+var Scale=1;
+var Label="";
+var PicUrl="";
+var FuncFlag="";
+
+var tempName="";
+
+
+
+
+
+
+}
+
+
+

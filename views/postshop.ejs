@@ -1,0 +1,148 @@
+<%-include header%>
+<%-include welcome%>
+<%if(!locals.error){%>
+<%- include shopnav%>
+<div class="container">
+		<div class="row">
+				<div class="col-xs-12">
+					<span class="tips">商品状态：</span>
+				</div>
+			</div>
+	<div class="row">
+		<div class="col-xs-12">
+		<div class="btn-group">
+					<li class="badge" style="background-color:green">
+						<a style="color:white" href="/postshop/1">普通商品</a>
+					</li>
+					<li class="badge"  style="background-color:#FF7F00">
+						<a style="color:white"  href="/postshop/2"><i class="fa fa-fire"></i>主打商品</a>
+					</li>
+					<li class="badge"  style="background-color:blue">
+						<a style="color:white"  href="/postshop/3"><i class="fa fa-times-circle"></i>下架商品</a>
+					</li>
+		</div>
+		
+	</div>
+</div>
+<hr>
+<script>
+$(function(){
+
+			$(".po").click(function(){
+
+				var holder=$(this);
+					var post={};
+					post.pid=parseInt($(this).parent().children(".pid").text());
+				 	$.ajax({
+					type:"POST",
+					data:JSON.stringify(post),
+					contentType:'application/json',
+					url:"/postpo",
+					success:function(data){
+									
+								holder.parent().parent().parent().remove();
+						
+					}
+					});
+
+
+			});
+
+			$(".hot").click(function(){
+
+				var holder=$(this);
+					var post={};
+					post.pid=parseInt($(this).parent().children(".pid").text());
+				 	$.ajax({
+					type:"POST",
+					data:JSON.stringify(post),
+					contentType:'application/json',
+					url:"/posthot",
+					success:function(data){
+									
+								holder.parent().parent().parent().remove();
+						
+					}
+					});
+
+
+			});
+
+			$(".down").click(function(){
+
+				var holder=$(this);
+					var post={};
+					post.pid=parseInt($(this).parent().children(".pid").text());
+				 	$.ajax({
+					type:"POST",
+					data:JSON.stringify(post),
+					contentType:'application/json',
+					url:"/postdown",
+					success:function(data){
+									
+								holder.parent().parent().parent().parent().remove();
+						
+					}
+					});
+
+
+			});
+
+
+
+});
+</script>
+<div class="container">
+<%posts.forEach(function(post,index){var ostate="";
+	switch(post.state){
+		case 1:
+		ostate="普通商品";
+		break;
+		case 2:
+		ostate="热门商品";
+		break;
+		case 3:
+		ostate="下架商品";
+		break;
+		default:
+		ostate="商品出现未知错误";
+}%>
+	<div class="postitem">
+		<%=ostate%>
+		<div class="row">
+			<div class="col-xs-3">
+			<a href="/p/<%=post.pid%>"><img src=<%=post.pic%> class="img-responsive" /></a>
+			</div>
+			<div class="col-xs-9">
+				<a href="/p/<%=post.pid%>"><%=post.name%></a> <span class="price pull-right">¥:<%=post.price%></span>
+				<hr>
+				<div class="pull-right">
+				<span class="pid hidden"><%=post.pid%></span>
+				<a href="/postupdate/<%=post.pid%>" class="update btn btn-info"><i class="fa fa-underline"><strong>更新</strong></i></a>
+				<%if(post.state==1){%>
+				<a class="hot btn btn-danger"><i class="fa fa-fire"></i><strong>力推</strong></a>
+				<%}%>
+				<%if(post.state==2){%>
+				<a class="po btn btn-success"><strong>普通</strong></i></a>
+				<%}%>
+				<%if(post.state!=3){%>
+				<a class="down btn btn-warning"><i class="fa fa-times-circle"><strong>下架</strong></i></a>
+				<%}else{%>
+				<a class="po btn btn-warning"><i class="fa fa-times-circle"><strong>上架</strong></i></a>
+				<%}%>
+				</div>
+			</div>
+			
+		</div>
+		<span class="badge pull-left">已售<%=post.sold%>关注<%=post.pv%></span>
+		<hr>
+	</div>
+	
+<%})%>
+</div>
+<%-include page%>
+<%}else{%>
+<h2>权限不够</h2>
+<%}%>
+<%-include nav%>
+<%-include footer%>

@@ -1,0 +1,62 @@
+<%- include header%>
+
+<div class="row">
+
+
+<table class="table">
+
+
+<thead>
+<th><p>欢迎您：<%= user%></p></th>
+<th><a href="/logout">退出</a></th>
+</thead>
+<tbody>
+<div class="show">
+<%orders.forEach(function(order,index){
+var x=order.carts;
+var color=index%3;
+var bcolor="";
+if (color==0) bcolor="danger";
+if(color==1) bcolor="success";
+if(color==2) bcolor="warning";
+%>
+<tr><td colspan="4"><%= order.time.minute%></td></tr>
+<tr class=<%= bcolor%>>
+<td colspan="2">收货地址：<%= order.adds.ip%>的萨芬的萨芬大师傅的撒</td>
+<td>收件人：<%= order.adds.who%></td>
+<td>联系方式：<%= order.adds.phone%></td>
+</tr>
+<% x.forEach(function(car,index){
+%>
+
+<tr class=<%= bcolor%>>
+<td rowspan=2><img width="40px" height="40px" src=<%= car.pic%> /></td>
+<td class="pname" colspan=2><%= car.pname%></td>
+<td  rowspan=2>
+              <%= car.amount%>
+
+</td>
+</tr>
+<tr class=<%= bcolor%>>
+<td colspan=2><%= car.price%></td>
+
+</tr>
+
+</div>
+
+<%})%>
+<%})%>
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+<%- include footer%>
+
+
+
+

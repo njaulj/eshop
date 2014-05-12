@@ -1,0 +1,54 @@
+body {
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+	padding-bottom:20px;
+}
+
+
+
+.info{
+
+display:none;
+
+}
+
+
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+  padding: 8px;
+  vertical-align:middle;
+  border-top: 0.5px solid #ffffff;
+}
+
+tr{
+line-height:50px;
+
+}
+
+
+input{
+border:0;
+line-height:20px;
+BACKGROUND-COLOR: transparent;
+
+}
+
+
+.show{
+
+border:0;
+}
+
+
+
+.checkbox,.radio{display: inline-block;*display: inline;*zoom:1;height: 24px; line-height: 24px; margin-right: 20px;}
+.checkbox ins,.radio ins{display: inline-block;*display: inline;*zoom:1; width: 23px; height: 22px; vertical-align: middle; background: url(http://www.bootcss.com/p/icheck/skins/square/blue.png) no-repeat; margin-right: 8px; -webkit-transition:all 0.1s linear; -moz-transition:all 0.1s linear; -o-transition:all 0.1s linear; -ms-transition:all 0.1s linear; transition:all 0.1s linear;vertical-align: middle;}
+.radio ins{background-position: -120px 0px; }
+.radio .hover{background-position: -144px 0px;}
+.radio .checked{background-position: -168px 0px;}
+.radio .enable{background-position: -214px 0px;}
+.radio .disabled{background-position: -191px 0px;}
+.checkbox span,.radio span{display: inline-block;*display: inline;*zoom:1;vertical-align: middle; }

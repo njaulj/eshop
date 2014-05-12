@@ -1,0 +1,48 @@
+<div class="row clearfix">
+	<div class="col-md-12 column">
+<ul class="nav nav-pills">
+		<% if(locals.user){ %>
+				<li class="active">
+					<a href="/list">我的订单</a>
+				</li>
+				<li>
+					<a href="/">主页</a>
+				</li>
+				<li>
+					<a href="/mm">女士专区</a>
+				</li>
+				<li>
+					<a href="/man">男士专区</a>
+				</li>
+				<li>
+					<a href="/cart">购物车</a>
+				</li>
+				<li>
+					<a href="/logout">登出</a>
+				</li>
+		<% } else {%>
+				<li class="active">
+					<a href="/login">登录</a>
+				</li>
+				<li >
+					<a href="/reg">注册</a>
+				</li>
+			<% } %>
+		
+				
+			</ul>
+		</div>
+	</div>
+</div>
+
+
+
+<script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="http://cdn.bootcss.com/twitter-bootstrap/3.0.3/js/bootstrap.min.js"></script>
+
+
+</body>
+
+</html>

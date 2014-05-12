@@ -1,0 +1,23 @@
+<%-include header%>
+<%-include welcome%>
+
+<div class="container">
+	<div class="thumbnail">
+		<a href="/p/<%=order.pid%>"><img src=<%=order.pic%> /></a>
+		<div class="caption">
+
+			<h4>付款总价：<span class="price"><%=order.amount*order.price%></span>元</h4>
+			<h4>收款方：<%=order.seller%></h4>
+			<h4>付款方：<%=order.buyer%></h4>
+			 <a href=<%=payment%>> 
+			 <img src='https://img.alipay.com/sys/personalprod/style/mc/btn-index.png' />
+			 </a>
+			 <h6 class="pull-right">南京易精经网络科技有限公司</h6>
+		</div>
+
+	</div>
+
+</div>
+
+<%-include nav%>
+<%-include footer%>

@@ -1,0 +1,34 @@
+<%- include header %>
+<%- include topic%>
+<div class="row">
+<div class="col-xs-12">
+ 	<form method="post" role="form">
+						
+						
+							<span class="tips help-block"><%if(locals.error){%><%=error%><%}%></span>
+					<br>
+							<div class="input-group">
+						  <span class="input-group-addon"><i class="fa fa-mobile fa-fw"></i></span>
+						  <input class="form-control" type="text" name="name" placeholder="请输入您注册时的手机号或昵称">
+						</div>	
+						<br>
+					
+						<div class="input-group">
+						  <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
+						  <input class="form-control" type="password" name="password" placeholder="请输入密码">
+						</div>	
+						<br>
+						
+								 <button type="submit"  class="col-xs-12 btn btn-success">登录</button>
+	
+					</form>
+				
+	</div>
+	</div>
+	<hr>
+	<div class="row">
+	<dic class="col-xs-12">
+	<a href="/reg"  class="col-xs-12  btn btn-primary">没有账号？快来注册吧</a>
+	</div>
+	</div>
+<%- include footer %>

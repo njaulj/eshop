@@ -1,0 +1,124 @@
+<%- include header%>
+<%- include show%>
+
+<hr>
+
+  <script>
+  $(function(){
+      var winH = $(window).height();
+      var i=2;
+      var j=1;
+  
+      $(window).scroll(function () { 
+        var pageH=$("body").height();
+        var scrollT = $(window).scrollTop();
+        var aa = (pageH-winH-scrollT)/winH;
+        
+        if(aa<0.02){
+          
+        $.ajax({
+            type:"GET",
+            data:{page:i},
+            contentType:'application/json',
+            url:"/shop/<%=boss%>/brand/<%=brand%>/sex/<%=sex%>",
+            success:function(data){
+            if(data.posts.length>0){
+              data.posts.forEach(function(post,index){
+
+                var se="";
+                if(post.sex=="Female")
+                {se="Female";
+                }
+                else {
+                se="Male";
+                }
+                var str="<div class=\"product\"><div class=\"pid hidden\">"+post.pid+"</div><div class=\"row\"><div class=\"col-xs-12\"><ul class=\"breadcrumb\"><li><a class=\"brand\" href=\"/shop/"+post.boss+"/brand/"+post.brand+"\">"+post.brand+"</a></li><li><a class="+se+" href=\"/shop/"+post.boss+"/brand/"+post.brand+"/sex/"+se+"\">"+post.sex+"</a></li></ul></div></div><div class=\"row\"><div class=\"col-xs-7\"><h4 ><a href=\"/p/"+post.pid+"\" class=\"pname\">"+post.name+"</a></h4><strong>¥：</strong><a class=\"price inline\">"+post.price+"</a><h6 class=\"desp\">"+post.desp+"</h6><a class=\"sold btn btn-sm btn-danger\">已售:10000件</a><button class=\"add btn btn-sm btn-info\"><i class=\"fa fa-shopping-cart\"></i>Buy!</button></div><div class=\"col-xs-5\"><img src="+ post.pic+" class=\"pic img-responsive\" /></div></div><div class=\"row\"><div class=\"col-xs-12\"><hr></div></div></div>";
+              $("#products").append(str);                 
+              }); 
+              i++;
+              }
+              else {
+              $("#shoptips").text("亲，已经到底了，小熊已经通知掌柜的上新货了！");
+              return false;
+              }                   
+            }
+
+            });
+}
+      });
+
+   $(".add").click(function(){
+    var holder=$(this);
+    var order={};
+    order.pid=parseInt($(this).parent().parent().prev().prev().text());
+    order.desp=$(this).prev().prev().text();
+    order.pname=$(this).prev().prev().prev().prev().prev().text();
+    order.amount=0;
+    order.state="watch";
+    order.pic=$(this).parent().next().children(".pic").attr("src");
+
+    $.ajax({
+    type:"POST",
+    data:JSON.stringify(order),
+    contentType:'application/json',
+    url:"/cart",
+    success:function(data){
+      if(data.success==1){
+      holder.prop('disabled', true);
+      }
+    }
+    });
+
+   });
+
+
+  
+
+  });
+  </script>
+          
+<div id="products">
+<% if(posts && posts.length>0){posts.forEach(function(post,index){%>
+  <div class="product">
+    <div class="pid hidden"><%=post.pid%></div>
+    <div class="row">
+      <div class="col-xs-12">
+        <ul class="breadcrumb">
+                <li>
+              
+                  <a class="brand" href="/shop/<%=boss%>/brand/<%=post.brand%>"><%=post.brand%></a>
+              
+                </li>
+                <li>
+                <%if(post.sex=="Female"){%>
+                  <a class=<%=post.sex%> href="/shop/<%=boss%>/brand/<%=post.brand%>/sex/<%=post.sex%>"><%=post.sex%></a>
+                  <%}else{%>
+                  <a class=<%=post.sex%> href="/shop/<%=boss%>/brand/<%=post.brand%>/sex/<%=post.sex%>"><%=post.sex%></a>
+                  <%}%>
+                </li>
+            </ul>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-7">
+      <h4 ><a href="/p/<%=post.pid%>" class="pname"><%=post.name%></a></h4>
+      <strong>¥：</strong><a class="price inline"><%=post.price%></a>
+      <h6 class="desp"><%=post.desp%></h6>
+      <a class="sold btn btn-sm btn-danger">已售:10000件</a>
+      <button class="add btn btn-sm btn-info"><i class="fa fa-shopping-cart"></i>Buy!</button>
+      </div>
+
+
+      <div class="col-xs-5">
+      <img src=<%= post.pic%> class="pic img-responsive" />
+      </div>
+    </div>
+    <div class="row">
+    <div class="col-xs-12"><hr></div>
+    </div>
+  </div>
+  <%})}%>
+</div>
+<span id="shoptips" class="tips"></span>
+<%- include footer%>

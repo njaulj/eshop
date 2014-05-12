@@ -1,0 +1,26 @@
+<div class="row">
+<div class="col-xs-12">
+
+			<div class="carousel slide" id="carousel-260025" data-ride="carousel" data-interval="2000">
+
+				<div class="carousel-inner">
+					<%if(ads.length>0){ads.forEach(function(ad,index){if(index==0){%>
+					<div class="item active">
+						<a href="/p/<%=ad.pid%>"><img alt="" src=<%=ad.pic%> class="img-responsive"/></a>
+
+					</div>
+					<%}else{%>
+					<div class="item">
+						<a href="/p/<%=ad.pid%>"><img alt="" src=<%=ad.pic%> class="img-responsive"/></a>
+
+					</div>
+					<%}})}else{%>
+					<div class="item active">
+						<img alt="" src="/uploads/<%=boss%>/ad.jpeg" class="img-responsive"/>
+					</div>
+					<%}%>
+
+				</div> 
+			</div>
+</div>
+</div>

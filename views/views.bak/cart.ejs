@@ -1,0 +1,349 @@
+<%- include header%>
+
+<script>
+		$(function(){
+
+
+		function sum(){
+			
+			var number=$(".eachtotal");
+			var sum=parseFloat(0.00);
+			for(i=0;i<number.length;i++)
+			{
+			
+				
+				sum=sum+parseFloat(number.eq(i).text());
+			}
+
+			$("#total").text(sum);
+
+		};
+
+		$(".eachtotal").each(function(){
+			var price=parseFloat($(this).prev().prev().prev().prev().prev().text());
+			var amount=parseInt($(this).prev().prev().prev().children(".amount").children(".amount").text());
+			var et=price*amount;
+			$(this).text(et);
+			sum();
+
+		});
+
+
+		$(".del").click(function(){
+				var holder=$(this);
+				var data={};
+				data.cid=parseInt($(this).parent().parent().parent().prev().prev().text());
+
+				$.ajax({
+				type:"POST",
+				data:JSON.stringify(data),
+				contentType: 'application/json',
+				url:"/cart/del",
+				success:function(data){
+
+				holder.parent().parent().parent().parent().remove();
+				sum();
+				}
+				});
+
+				
+
+
+
+		});
+
+
+		$(".plus").click(function(){
+			var holder=$(this);
+			var num=parseInt($(this).parent().prev().children(".amount").text());
+			var data={};
+			data.cid=parseInt($(this).parent().parent().parent().prev().prev().text());
+			data.amount=1;
+			var price=parseFloat($(this).parent().parent().prev().prev().text());
+			$.ajax({
+			type:"POST",
+			data:JSON.stringify(data),
+			contentType: 'application/json',
+			url:"/cart/modify",
+			success:function(data){
+
+					holder.parent().prev().children(".amount").text(num+1);
+					var et=price*(num+1);
+					holder.parent().parent().next().next().next().text(et);
+					sum();
+			}
+			});
+					
+		});
+
+		
+		$(".minus").click(function(){
+				var holder=$(this);
+				var num=parseInt($(this).parent().next().children(".amount").text());
+				if(num>0)
+				{
+				var data={};
+				data.cid=parseInt($(this).parent().parent().parent().prev().prev().text());
+				data.amount=-1;
+				var price=parseFloat($(this).parent().parent().prev().prev().text());
+
+				$.ajax({
+				type:"POST",
+				data:JSON.stringify(data),
+				contentType: 'application/json',
+				url:"/cart/modify",
+				success:function(data){
+					holder.parent().next().children(".amount").text(num-1);
+						var et=price*(num-1);
+						holder.parent().parent().next().next().next().text(et);
+						sum();
+				}
+				});
+				
+				}
+
+		});
+
+
+		});
+		</script>
+
+		<hr>
+			<div class="row">
+				<div class="col-xs-3 info">
+				购物车
+				</div>
+				<div class="col-xs-9 info">
+				<%if(carts.length<2){%>亲，快去购物吧，伦家口袋都快空了!<%}%>
+				</div>
+			</div>
+		<hr>
+		<%if(carts && carts.length>0){
+			carts.forEach(function(cart,index1){
+				posts.forEach(function(post,index){
+					if(post.pid==cart.pid){%>
+				<div class="cart row">
+					<div class="pid hidden"><%=cart.pid%>
+					</div>
+					<div class="cid hidden"><%=cart.cid%>
+					</div>
+					<div class="col-xs-5">
+						<img src=<%= post.pic%> class="img-responsive"/>
+					</div>
+					<div class="col-xs-7">
+							<h5><a href="#" class="pname"><%=post.name%></a></h5>
+							<strong>¥:</strong>
+							<a class="price inline"><%=post.price%></a>
+							<hr>
+							<div class="row">
+								<div class="op col-xs-3">
+								<a class="minus btn btn-primary"><i class="fa fa-minus-circle fa-fw"></i></a>
+								</div>
+								<div class="amount op col-xs-3">
+								<a class="amount btn btn-warning"><%= cart.amount%></a>
+								</div>
+								<div class="op col-xs-3">
+								<a class="plus btn btn-info"> <i class="fa fa-plus-circle fa-fw"></i></a>
+								</div>
+								<div class="op col-xs-3">
+								<a class="del btn btn-danger"> <i class="fa fa-trash-o fa-fw"></i></a>
+								</div>
+							</div>
+							<hr>
+							<strong>小计¥:</strong>
+							<a class="eachtotal price inline"></a>
+
+					</div>
+					
+				</div>	
+			
+					<hr>
+
+				<%}})%>
+				<%})}%>
+				
+	
+					<div class="row">
+						<div class="col-xs-5"></div>
+						<div class="col-xs-3"><strong>总计¥:</strong></div>
+						<div id="total" class="price col-xs-4 "></div>
+					</div>	
+			<script>
+$(function(){
+
+	$("#submit").click(function(){
+	var holder=$(this);
+	var data={};
+	data.ip=$("#ip").val();
+	data.who=$("#who").val();
+	data.phone=$("#phone").val();
+		$.ajax({
+
+	type:"POST",
+	data:JSON.stringify(data),
+	contentType: 'application/json',
+	url:"/address",
+	success:function(datajson){
+		if(datajson.success==1)
+		{
+			
+			$("tbody").append("<tr><td class='center'>"+"<input type='radio' name='getadds'><ins></ins></input>"+"</td>"+"<td class='hidden'></td>"+"<td class='center'>"+data.ip+"</td><td class='center'>"+data.who+"</td><td>"+data.phone+"</td><td class='center'></td></tr>");
+
+			$("#addtips").text("地址添加成功！");
+
+
+
+		}
+	}
+	});
+
+
+
+	
+});
+
+
+$(".delete").click(function(){
+	
+	var holder=$(this);
+	var data={};
+	data.aid=parseInt($(this).parent().prev().prev().prev().prev().text());
+	data.ip=$(this).parent().prev().prev().prev().text();
+	data.who=$(this).parent().prev().prev().text();
+	data.phone=$(this).parent().prev().text();
+
+
+	$.ajax({
+	type:"POST",
+	data:JSON.stringify(data),
+	contentType: 'application/json',
+	url:"/address/del",
+	success:function(datajson){
+	if(datajson.success==1){
+
+		holder.parent().parent().remove();
+		$("#addtips").text("地址删除成功！");
+	}
+
+	}
+	});
+
+	
+
+
+});
+
+
+
+$("#order").click(function(){
+		var pid=$(".pid")
+		var data={};
+		var cart=$(".cart");
+		var s=$('input:radio[name="getadds"]:checked');
+		var totalprice=parseFloat($("#total").text());
+		var ipnow=$(s).parent().next().next().text();
+		if (totalprice>0){
+		if(ipnow){
+				data.ip=$(s).parent().next().next().text();
+				data.who=$(s).parent().next().next().next().text();
+				data.phone=$(s).parent().next().next().next().next().text();
+				data.total=parseFloat($("#total").text());
+
+
+				$.ajax({
+				type:"POST",
+				data:JSON.stringify(data),
+				contentType: 'application/json',
+				url:"/order",
+				success:function(data){
+					$(".cart").remove();
+					$("#total").remove();
+					$("#ordertips").text("订单已经生成，小熊已经在为您准备货物了呢～");
+				}
+				});
+		}
+		else {$("#ordertips").text("收货地址没有，快递小哥会呆掉的-_-#");
+			return false;}
+		}
+		else {$("#ordertips").text("亲，小店不支持0件购买哟-_-#");
+		return false;}
+
+		});
+});
+</script>
+
+
+
+
+
+
+	<table class="table table-hover">
+		<thead>
+			<tr>
+			<td>选择</td>
+			<td>收货地址</tdr>
+			<td>收件人</td>
+			<td>联系方式</td>
+			<td>操作</td>
+			</tr>
+		</thead>
+		<tbody>
+			<% if(adds && adds.length>0){adds.forEach(function(add,index){%>
+			<tr>
+			<td><input type="radio" name="getadds"></input></td>
+			<td class="hidden"><%= add.aid%></td>
+			<td class="center"><%= add.ip%></td>
+			<td class="center"><%= add.who%></td>
+			<td class="center"><%= add.phone%></td>
+			<td class="center">
+				<button class="delete btn btn-danger">
+					<i class="fa fa-trash-o"></i> 
+					</button>
+			</td>
+			</tr>
+			<hr>
+			<%})}%>
+
+		</tbody>
+
+	</table>
+
+<hr>
+<span id="ordertips" class="tips help-block"></span>
+<button id="order" class="col-xs-12 btn btn-danger">生成订单</button>
+
+<div class="row">
+	<div class="col-xs-12">
+	<hr>
+		<span class="tips help-block">添加收货地址</span>
+		<span id="addtips" class="tips help-block"></span>
+						<br>
+							<div class="input-group">
+							  <span class="input-group-addon"><i class="fa fa-truck fa-fw"></i></span>
+							  <input class="form-control" type="text" id="ip" placeholder="请输入收货地址">
+							</div>
+
+							<br>
+							<div class="input-group">
+							  <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
+							  <input class="form-control" type="text" id="who" placeholder="请输入收货人姓名">
+							</div>
+							<br>
+							<div class="input-group">
+							  <span class="input-group-addon"><i class="fa fa-phone fa-fw"></i></span>
+							  <input class="form-control" type="text" id="phone" placeholder="请输入收货人联系方式">
+							</div>
+							<br>
+
+			  <a id="submit" class="col-xs-12 btn btn-primary">添加地址</a>
+			  <hr>
+			
+</div>
+
+</div>
+
+<%- include shopfooter%>
+
+
+
+
